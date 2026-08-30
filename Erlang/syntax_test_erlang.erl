@@ -7,6 +7,29 @@
 %^^^^^^^^^^^^ comment.line.percentage.erlang punctuation.definition.comment.erlang
 %            ^^^^^ comment.line.percentage.erlang - punctuation
 
+%
+% Merge Conflict Marker Tests
+%
+
+<<<<<<< HEAD
+%  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+% ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+%      ^ meta.block.conflict.begin.diff - entity - punctuation
+%       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+%           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+%  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+% ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+%      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+%  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+% ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+%      ^ meta.block.conflict.end.diff - entity - punctuation
+%       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+%             ^ meta.block.conflict.end.diff - entity - punctuation
+
 % Atom tests
 
 atom_tests() -> .
@@ -684,6 +707,90 @@ map_tests() -> .
 %   ^ meta.mapping.erlang - meta.mapping.key.erlang - meta.mapping.value.erlang
 %    ^ - meta.mapping
 %   ^ punctuation.section.mapping.end.erlang
+
+
+map_comprehension_tests() ->
+
+    #{ => || }
+%   ^^ meta.mapping.erlang punctuation.section.mapping.begin.erlang
+%     ^ meta.mapping.key.erlang
+%      ^^ meta.mapping.erlang punctuation.separator.key-value.erlang
+%        ^ meta.mapping.value.erlang
+%         ^^ meta.mapping.erlang keyword.operator.comprehension.erlang
+%           ^ meta.mapping.filter.erlang
+%            ^ meta.mapping.erlang punctuation.section.mapping.end.erlang
+
+    #{K => K || K <- List}
+%   ^^ meta.mapping.erlang punctuation.section.mapping.begin.erlang
+%     ^^ meta.mapping.key.erlang
+%     ^ variable.other.readwrite.erlang
+%       ^^ meta.mapping.erlang punctuation.separator.key-value.erlang
+%         ^^^ meta.mapping.value.erlang
+%          ^ variable.other.readwrite.erlang
+%            ^^ meta.mapping.erlang keyword.operator.comprehension.erlang
+%              ^^^^^^^^^^ meta.mapping.filter.erlang
+%               ^ variable.other.readwrite.erlang
+%                 ^^ keyword.operator.generator.erlang
+%                    ^^^^ variable.other.readwrite.erlang
+%                        ^ meta.mapping.erlang punctuation.section.mapping.end.erlang
+
+    #{K => V || <<K, V>> <= Binary}
+%   ^^ meta.mapping.erlang punctuation.section.mapping.begin.erlang
+%     ^^ meta.mapping.key.erlang
+%     ^ variable.other.readwrite.erlang
+%       ^^ meta.mapping.erlang punctuation.separator.key-value.erlang
+%         ^^^ meta.mapping.value.erlang
+%          ^ variable.other.readwrite.erlang
+%            ^^ meta.mapping.erlang keyword.operator.comprehension.erlang
+%              ^^^^^^^^^^^^^^^^^^^ meta.mapping.filter.erlang
+%               ^^^^^^^^ meta.sequence.binary.erlang
+%               ^^ punctuation.definition.sequence.begin.erlang
+%                 ^ variable.other.readwrite.erlang
+%                  ^ punctuation.separator.sequence.erlang
+%                    ^ variable.other.readwrite.erlang
+%                     ^^ punctuation.definition.sequence.end.erlang
+%                        ^^ keyword.operator.generator.erlang
+%                           ^^^^^^ variable.other.readwrite.erlang
+%                                 ^ meta.mapping.erlang punctuation.section.mapping.end.erlang
+
+    #{ || {K, V} <- maps:to_list(Map)}
+%   ^^ meta.mapping.erlang punctuation.section.mapping.begin.erlang
+%     ^ meta.mapping.key.erlang
+%      ^^ meta.mapping.erlang keyword.operator.comprehension.erlang
+%        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.mapping.filter.erlang
+%         ^^^^^^ meta.sequence.tuple.erlang
+%         ^ punctuation.section.sequence.begin.erlang
+%          ^ variable.other.readwrite.erlang
+%           ^ punctuation.separator.sequence.erlang
+%             ^ variable.other.readwrite.erlang
+%              ^ punctuation.section.sequence.end.erlang
+%                ^^ keyword.operator.generator.erlang
+%                   ^^^^^^^^^^^^ meta.path.erlang
+%                   ^^^^ meta.atom.erlang variable.namespace.erlang
+%                       ^ punctuation.accessor.double-colon.erlang
+%                        ^^^^^^^ meta.function-call.identifier.erlang meta.atom.erlang variable.function.erlang
+%                               ^^^^^ meta.function-call.arguments.erlang
+%                               ^ punctuation.section.arguments.begin.erlang
+%                                ^^^ variable.other.readwrite.erlang
+%                                   ^ punctuation.section.arguments.end.erlang
+%                                    ^ meta.mapping.erlang punctuation.section.mapping.end.erlang
+
+    [{Key, Value} || Key := Value <- MapOrIterator]
+%   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.sequence.list.erlang
+%   ^ punctuation.section.sequence.begin.erlang
+%    ^^^^^^^^^^^^ meta.sequence.tuple.erlang
+%    ^ punctuation.section.sequence.begin.erlang
+%     ^^^ variable.other.readwrite.erlang
+%        ^ punctuation.separator.sequence.erlang
+%          ^^^^^ variable.other.readwrite.erlang
+%               ^ punctuation.section.sequence.end.erlang
+%                 ^^ keyword.operator.comprehension.erlang
+%                    ^^^ variable.other.readwrite.erlang
+%                        ^^ punctuation.separator.key-value.erlang
+%                           ^^^^^ variable.other.readwrite.erlang
+%                                 ^^ keyword.operator.generator.erlang
+%                                    ^^^^^^^^^^^^^ variable.other.readwrite.erlang
+%                                                 ^ punctuation.section.sequence.end.erlang
 
 % Number tests
 
@@ -2657,7 +2764,7 @@ preprocessor_spec_tests() -> .
 %                                                    ^ punctuation.section.sequence.begin.erlang
 %                                                     ^^^^ support.type.erlang
 %                                                           ^ punctuation.separator.sequence.erlang
-%                                                             ^^^ variable.language.any.erlang
+%                                                             ^^^ keyword.operator.variadic.erlang
 %                                                                ^ punctuation.terminator.clause.erlang
 
 -spec Foo.
@@ -3294,7 +3401,7 @@ preprocessor_fun_type_tests() -> .
 %              ^^^ support.type.erlang
 %                 ^ punctuation.section.arguments.begin.erlang
 %                  ^ punctuation.section.parameters.begin.erlang
-%                   ^^^ variable.language.any.erlang
+%                   ^^^ keyword.operator.variadic.erlang
 %                      ^ punctuation.section.parameters.end.erlang
 %                        ^^ punctuation.separator.parameters-return-type.erlang
 %                           ^^^ storage.type.erlang
@@ -4555,7 +4662,7 @@ function_call_tests() ->
 %               ^ punctuation.section.arguments.end.erlang
 %                ^ punctuation.separator.expressions.erlang
 
-% match builtin functions without respect of preceeded namespace
+% match builtin functions without respect of preceded namespace
 
     erlang:abs(X),
 %   ^^^^^^^ meta.path.erlang - meta.function-call
@@ -4684,7 +4791,7 @@ function_call_tests() ->
 %                    ^ punctuation.section.arguments.end.erlang
 %                     ^ punctuation.separator.expressions.erlang
 
-% builtins don't need the namespace preceeded
+% builtins don't need the namespace preceded
 
     abs(X),
 %  ^ - meta.function-call - meta.path
@@ -4792,7 +4899,7 @@ function_call_tests() ->
 %                    ^ punctuation.section.arguments.end.erlang
 %                     ^ punctuation.separator.expressions.erlang
 
-% don't match macro names as builin functions
+% don't match macro names as builtin functions
 
     ?FUNC(X),
 %  ^ - meta.function-call - meta.path

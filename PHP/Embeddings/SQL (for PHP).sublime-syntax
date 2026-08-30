@@ -1,12 +1,35 @@
 %YAML 1.2
 ---
 scope: source.sql.embedded.php
+version: 2
 hidden: true
 
 extends: Packages/SQL/SQL.sublime-syntax
 
 contexts:
+
+  main:
+    - meta_prepend: true
+    # prevent stray bracket highlighting
+    - match: \)
+      scope: punctuation.section.group.end.sql
+
   prototype:
+    - meta_prepend: true
+    - include: php-single-quoted-strings
+    - include: php-string-single-quoted-escapes
+
+  comment-prototype:
+    - meta_prepend: true
+    - include: php-single-quoted-strings
+    - include: php-string-single-quoted-escapes
+
+  identifier-prototype:
+    - meta_prepend: true
+    - include: php-single-quoted-strings
+    - include: php-string-single-quoted-escapes
+
+  string-prototype:
     - meta_prepend: true
     - include: php-single-quoted-strings
     - include: php-string-single-quoted-escapes

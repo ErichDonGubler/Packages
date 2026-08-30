@@ -82,6 +82,75 @@
     **/
 /*  ^^^ invalid.illegal.stray-comment-end.c */
 
+/*
+ * Merge Conflict Marker Tests
+ */
+
+/* Merge conflicts in comments
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+*/
+
+/** Merge conflicts in docblock comments
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+*/
+
+/* Top-level merge conflicts */
+
+<<<<<<< HEAD
+/* <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff */
+/*^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff */
+/*     ^ meta.block.conflict.begin.diff - entity - punctuation */
+/*      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff */
+/*          ^ meta.block.conflict.begin.diff - entity - punctuation */
+
+=======
+/* <- meta.block.conflict.separator.diff punctuation.section.block.diff */
+/*^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff */
+/*     ^ meta.block.conflict.separator.diff - punctuation */
+
+>>>>>>> master
+/* <- meta.block.conflict.end.diff punctuation.section.block.end.diff */
+/*^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff */
+/*     ^ meta.block.conflict.end.diff - entity - punctuation */
+/*      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff */
+/*            ^ meta.block.conflict.end.diff - entity - punctuation */
+
 Task<int> natural_numbers()
 {
   int n = 0;
@@ -118,28 +187,28 @@ int main(){
 /////////////////////////////////////////////
 
 #ifndef IGUARD_
- /* <- keyword.control.import */
+ /* <- keyword.control.directive */
 #define IGUARD_
- /* <- keyword.control.import.define */
+ /* <- keyword.control.directive.define */
 struct foo* alloc_foo();
 /* <- keyword.declaration */
        /* <- - entity.name.type */
             /* <- entity.name.function */
 #endif
- /* <- keyword.control.import */
+ /* <- keyword.control.directive */
 
 // The following example ensures that comments at the end of preprocessor
 // directives don't mess with context transitions
 int func() {
 /*  ^ entity.name.function */
     #if( EXTAL == 40000 )       /* 40 MHz */
-/*  ^ keyword.control.import */
+/*  ^ keyword.control.directive */
         #define PLL_RFD_PHI1    10      // PLL0_PH1 = 40MHz
-/*      ^ keyword.control.import */
+/*      ^ keyword.control.directive */
 /*                              ^^ meta.number */
 /*                                      ^ comment.line */
     #endif
-/*  ^ keyword.control.import */
+/*  ^ keyword.control.directive */
 }
 /* <- meta.function meta.block punctuation.section.block.end */
  /* <- - meta.function meta.block */
@@ -154,12 +223,12 @@ int g(int x = 5 \
 
 #define MACRO_WITH_CURLY_BRACE {
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor.macro */
-/* <- keyword.control.import.define */
+/* <- keyword.control.directive.define */
 /*      ^ entity.name.constant */
 
 #define MACRO_WITH_CURLY_BRACE_2 }
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.preprocessor.macro */
-/* <- keyword.control.import.define */
+/* <- keyword.control.directive.define */
 /*      ^ entity.name.constant */
 
 FOOBAR
@@ -229,7 +298,7 @@ some_namespace::some_function(int a_parameter, double another_parameter) {
 #define max(a, b, \
 /*^^^^^^^^^^^^^^^^^ meta.preprocessor.macro */ \
 /*         ^^^^^^^^ meta.preprocessor.macro.parameters */ \
-/* <- keyword.control.import.define */ \
+/* <- keyword.control.directive.define */ \
 /*      ^ entity.name.function.preprocessor */ \
 /*         ^ punctuation.section.group.begin */ \
 /*          ^ variable.parameter */ \
@@ -450,14 +519,41 @@ bool b;
 char ch;
 /* <- storage.type */
 
-char16_t ch16;
-/* <- storage.type */
+size_t size_t_var;
+/* <- support.type.stddef */
 
-char32_t ch32;
-/* <- storage.type */
+ptrdiff_t ptrdiff_t_var;
+/* <- support.type.stddef */
 
-wchar_t wch;
-/* <- storage.type */
+max_align_t max_align_t_var;
+/* <- support.type.stddef */
+
+nullptr_t nullptr_t_var;
+/* <- support.type.stddef */
+
+wchar_t wchar_t_var;
+/* <- support.type.wchar */
+
+wint_t wint_t_var;
+/* <- support.type.wchar */
+
+wctrans_t wctrans_t_var;
+/* <- support.type.wchar */
+
+wctype_t wctype_t_var;
+/* <- support.type.wchar */
+
+mbstate_t mbstate_t_var;
+/* <- support.type.uchar */
+
+char8_t char8_t_var;
+/* <- support.type.uchar */
+
+char16_t char16_t_var;
+/* <- support.type.uchar */
+
+char32_t char32_t_var;
+/* <- support.type.uchar */
 
 unsigned int ui;
 /* <- storage.type */
@@ -774,7 +870,7 @@ A<B<C>> f(std::function<A<B<C>>()> g) {
 }
 int main() {
     std::function<C()> foo1;
-    /*          ^ - variabe.function */
+    /*          ^ - variable.function */
     std::function<B<C>()> foo2;
     /*          ^ - variable.function */
     auto f = [](std::function<A<B<C>>()> g) { return g(); };
@@ -1637,19 +1733,19 @@ void test_in_extern_c_block()
 /* temporary C++ preprocessor block */
 #ifdef __cplusplus
 /*                <- meta.preprocessor */
-/*   <- keyword.control.import */
+/*   <- keyword.control.directive */
 # ifndef _Bool
 /*            <- meta.preprocessor */
-/*      <- keyword.control.import */
+/*      <- keyword.control.directive */
    typedef bool _Bool;   /* semi-hackish: C++ has no _Bool; bool is builtin */
 /* ^ keyword.declaration */
 /*              ^ entity.name.type.typedef */
 # endif
 /*     <- meta.preprocessor */
-/*     <- keyword.control.import */
+/*     <- keyword.control.directive */
 #endif
 /*    <- meta.preprocessor */
-/*    <- keyword.control.import */
+/*    <- keyword.control.directive */
 
 void test_in_extern_c_block()
 /*   ^^^^^^^^^^^^^^^^^^^^^^^^ meta.function */
@@ -2173,13 +2269,13 @@ class Adapter2 : public Abstraction, private Scenario {
 
 class Adapter : public Abstraction
     #if defined ASPECTO_MACRO
-/*  ^^^ keyword.control.import  */
+/*  ^^^ keyword.control.directive  */
     , public Scenario
 /*  ^ punctuation.separator */
 /*    ^ storage.modifier */
 /*           ^ entity.other.inherited-class */
     #endif
-/*  ^^^^^^ keyword.control.import  */
+/*  ^^^^^^ keyword.control.directive  */
 {
 
 }
@@ -2474,6 +2570,23 @@ MyEnum MACRO1
 // Test preprocessor branching and C blocks
 /////////////////////////////////////////////
 
+int bar(int, int const *, int const * const);
+/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function */
+/*     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.parameters meta.group */
+/*     ^ punctuation.section.group.begin */
+/*                                         ^ punctuation.section.group.end */
+/*                                          ^ punctuation.terminator */
+/*      ^^^ storage.type */
+/*         ^ punctuation.separator */
+/*           ^^^ storage.type */
+/*               ^^^^^ storage.modifier */
+/*                     ^ keyword.operator */
+/*                      ^ punctuation.separator */
+/*                        ^^^ storage.type */
+/*                            ^^^^^ storage.modifier */
+/*                                  ^ keyword.operator */
+/*                                    ^^^^^ storage.modifier */
+
 int foo(int val, float val2[], bool val3 = false)
 /*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function */
 /*     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.parameters meta.group */
@@ -2497,11 +2610,11 @@ int foo(int val, float val2[], bool val3 = false)
     if (result == 0) {
         return 0;
 #if CROSS_SCOPE_MACRO
- /* <- keyword.control.import */
+ /* <- keyword.control.directive */
     } else if (result > 0) {
         return 1;
 #endif
- /* <- keyword.control.import */
+ /* <- keyword.control.directive */
     }
 /*  ^ meta.block meta.block punctuation.section.block.end */
 /*   ^ - meta.block meta.block */
@@ -2518,7 +2631,7 @@ int foo(int val, float val2[], bool val3 = false)
 #endif
 
 #ifdef FOO
- /* <- keyword.control.import */
+ /* <- keyword.control.directive */
     int foobar
 /*      ^^^^^^ - entity.name.function */
     ;
@@ -2526,11 +2639,11 @@ int foo(int val, float val2[], bool val3 = false)
     if (val == -1) {
 /*                 ^ meta.block meta.block punctuation.section.block.begin */
 #else
- /* <- keyword.control.import */
+ /* <- keyword.control.directive */
     if (val == -2) {
 /*                 ^ meta.block meta.block punctuation.section.block.begin */
 #endif
- /* <- keyword.control.import */
+ /* <- keyword.control.directive */
         val += 1;
     }
 /*  ^ meta.block punctuation.section.block.end */
@@ -2579,15 +2692,15 @@ GetTextMetrics(
     )
 {
 #ifdef UNICODE
-/* <- keyword.control.import */
+/* <- keyword.control.directive */
     return GetTextMetricsW(
 /*         ^ variable.function */
 #else
-/* <- keyword.control.import */
+/* <- keyword.control.directive */
     return GetTextMetricsA(
 /*         ^ variable.function */
 #endif
-/* <- keyword.control.import */
+/* <- keyword.control.directive */
         hdc,
         lptm
         );
@@ -2862,33 +2975,33 @@ NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K like %@",
 /////////////////////////////////////////////
 
 #import <Cocoa/Cocoa.h>
-/* <- meta.preprocessor.import keyword.control.import.import */
+/* <- meta.preprocessor.import keyword.control.directive.import */
 
 #include <uchar.h>
-/* <- meta.preprocessor.include keyword.control.import.include */
+/* <- meta.preprocessor.include keyword.control.directive.include */
 
 #include "foobar.h"
-/* <- keyword.control.import.include */
+/* <- keyword.control.directive.include */
 /*       ^ punctuation.definition.string.begin */
 /*        ^^^^^^^^ string.quoted.double.include */
 /*                ^ punctuation.definition.string.end */
 
 #include <cstdlib>
-/* <- keyword.control.import.include */
+/* <- keyword.control.directive.include */
 /*       ^ punctuation.definition.string.begin */
 /*        ^^^^^^^ string.quoted.other.lt-gt.include */
 /*               ^ punctuation.definition.string.end */
 
 #ifdef _GLIBCXX_INCLUDE_NEXT_C_HEADERS
 #include_next <math.h>
-/* <- keyword.control.import.include */
+/* <- keyword.control.directive.include */
 /*            ^ punctuation.definition.string.begin */
 /*             ^^^^^^ string.quoted.other.lt-gt.include */
 /*                   ^ punctuation.definition.string.end */
 #endif
 
 #include<iostream>
-/* <- keyword.control.import.include */
+/* <- keyword.control.directive.include */
 /*      ^ punctuation.definition.string.begin */
 /*       ^^^^^^^^ string.quoted.other.lt-gt.include */
 /*               ^ punctuation.definition.string.end */

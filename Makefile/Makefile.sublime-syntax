@@ -125,7 +125,7 @@ contexts:
     - include: variable-substitutions
     - include: control-flow
     - include: line-continuation
-    - match: ^\s*(endef)
+    - match: ^\s*(endef)\b
       captures:
         1: invalid.illegal.stray.endef.makefile
 
@@ -176,7 +176,8 @@ contexts:
             - include: pop-on-line-end
         - include: pop-on-line-end
     - match: ^\s*(vpath)$
-      captures: keyword.control.vpath.makefile
+      captures:
+        1: keyword.control.vpath.makefile
     - match: ^\s*({{include}})\s+
       captures:
         1: keyword.control.import.makefile
@@ -255,7 +256,7 @@ contexts:
   recipe-junction-between-spaces-or-tabs:
     - meta_content_scope: meta.function.body.makefile
     - include: comments
-    - match: ^\s*({{startdirective}})
+    - match: ^\s*({{startdirective}})\b
       captures:
         1: keyword.control.conditional.makefile
       push:
@@ -314,7 +315,7 @@ contexts:
     - include: shell-content
 
   shell-content:
-    - include: Packages/Makefile/Makefile Shell.sublime-syntax
+    - include: Packages/Makefile/Embeddings/Shell (for Makefile).sublime-syntax
       apply_prototype: true
 
   line-continuation:
@@ -377,6 +378,7 @@ contexts:
     - match: \#
       scope: punctuation.definition.comment.makefile
       push: comment-body
+    - include: merge-conflict-markers
 
   comment:
     - match: \#
@@ -389,6 +391,24 @@ contexts:
     - match: \\\\
     - match: \n
       pop: 1
+
+  merge-conflict-markers:
+    # see also: Diff.sublime-syntax#conflict-markers
+    - match: ^(<{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.begin.diff
+      captures:
+        1: punctuation.section.block.begin.diff
+        2: entity.name.section.diff
+    - match: ^(>{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.end.diff
+      captures:
+        1: punctuation.section.block.end.diff
+        2: entity.name.section.diff
+    - match: ^(\|{7}|={7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.separator.diff
+      captures:
+        1: punctuation.section.block.diff
+        2: entity.name.section.diff
 
   inside-function-call:
     - meta_content_scope: meta.function-call.arguments.makefile
@@ -509,13 +529,16 @@ contexts:
         - include: shell-content
 
   variable-definitions:
-    - match: \s*(override)\b
+    - match: \s*\b(override)\b
       captures:
         1: keyword.control.makefile
-    - match: \s*(define)\b
+    - match: \s*\b(define)\b
       captures:
         1: keyword.control.makefile
       push: inside-define-directive-context
+    - match: \s*\b(undefine)\b
+      captures:
+        1: keyword.control.makefile
     - match: ^\s*(export)\b
       captures:
         1: keyword.control.makefile
@@ -660,13 +683,13 @@ contexts:
     - match: \$(?=\$[{\w])
       scope: constant.character.escape.makefile
       push:
-        - include: scope:source.shell.bash#expansions-parameter
+        - include: scope:source.shell.bash#parameter-expansions
         - match: ''
           pop: 1
     - match: \$(?=\$\()
       scope: constant.character.escape.makefile
       push:
-        - include: scope:source.shell.embedded.makefile#expansions-command
+        - include: scope:source.shell.embedded.makefile#command-expansions
         - match: ''
           pop: 1
     - match: (\$)[[:alpha:]]

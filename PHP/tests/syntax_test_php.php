@@ -438,6 +438,87 @@
 //              ^^ punctuation.definition.comment.end
 //                ^ - comment
 
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+
+{
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+}
+
+[
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+]
+
+<<<HEREDOC
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+HEREDOC
 
 /******************************************************************************
  * Namespace Declarations Tests
@@ -1646,7 +1727,13 @@ class B
         //                    ^^ punctuation.separator.key-value.php
 
         return new self();
-//                 ^^^^ variable.language.this.php
+//             ^^^^^^^^^^ meta.instantiation.php
+//             ^^^ keyword.other.new.php
+//                 ^^^^ meta.function-call.identifier.php variable.language.this.php
+//                     ^^ meta.function-call.arguments.php meta.group.php
+//                     ^ punctuation.section.group.begin.php
+//                      ^ punctuation.section.group.end.php
+//                       ^ punctuation.terminator.statement.php
     }
 }
 
@@ -2020,6 +2107,23 @@ $var = function(array $ar=array(), ClassName $cls) use ($var1, &$var2) {
 //                                                                   ^ punctuation.section.group.end.php
 //                                                                     ^ punctuation.section.block.begin.php
 
+   some_function(fn() => throw $exception);
+//              ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function-call.arguments.php meta.group.php
+//                       ^^^^^^^^^^^^^^^^ meta.function.anonymous.php
+//                       ^^^^^ keyword.control.flow.throw.php
+//                             ^^^^^^^^^^ variable.other.php
+//                                       ^ punctuation.section.group.end.php
+
+   some_function(fn() => throw $exception, 'some other argument');
+//              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function-call.arguments.php meta.group.php
+//                       ^^^^^^^^^^^^^^^^ meta.function.anonymous.php
+//                                       ^^^^^^^^^^^^^^^^^^^^^^^^ - meta.function.anonymous
+//                       ^^^^^ keyword.control.flow.throw.php
+//                             ^^^^^^^^^^ variable.other.php
+//                                       ^ punctuation.separator.sequence.php
+//                                         ^^^^^^^^^^^^^^^^^^^^^ meta.string.php string.quoted.single.php
+//                                                              ^ punctuation.section.group.end.php
+
 };
 // <- meta.function.php meta.block.php punctuation.section.block.end.php
 
@@ -2112,11 +2216,11 @@ function bye(): never {
 }
 // <- meta.function.php meta.block.php punctuation.section.block.end.php
 
-function foo(?stinrg ...$args) {}
+function foo(?string_ ...$args) {}
 //           ^ storage.type.nullable
-//            ^^^^^^ support.class
-//                   ^^^ keyword.operator.variadic
-//                      ^^^^^ variable.parameter
+//            ^^^^^^^ support.class
+//                    ^^^ keyword.operator.variadic
+//                       ^^^^^ variable.parameter
 
     // incomplete and therefore invalid code to illustrate reference operator precedence
     function &typedParameterReferences(int & C &$v, bool & $new, ?string | $str) {}
@@ -2540,6 +2644,8 @@ $f9 = [Foo::class, 'staticmethod'](...);
 
 $f10 = (new MyClass)->myMethod(...);
 //     ^^^^^^^^^^^^^ meta.group.php
+//      ^^^^ meta.instantiation.php - meta.function-call
+//          ^^^^^^^ meta.instantiation.php meta.function-call.identifier.php
 //                    ^^^^^^^^ meta.function-call.identifier.php
 //                            ^^^^^ meta.function-call.arguments.php meta.group.php
 //     ^ punctuation.section.group.begin.php
@@ -2607,7 +2713,7 @@ goto Label2;
     default: ;
 //  ^^^^^^^ keyword.control.conditional.default.php - entity.name
     die: ;
-//  ^^^ keyword.control.flow.panic.php - entity.name
+//  ^^^ support.function.builtin.php - entity.name
     do: ;
 //  ^^ keyword.control.loop.do-while.php - entity.name
     echo: ;
@@ -2633,7 +2739,7 @@ goto Label2;
     eval:  ;
 //  ^^^^ support.function.builtin.php - entity.name
     exit: ;
-//  ^^^^ keyword.control.flow.panic.php - entity.name
+//  ^^^^ support.function.builtin.php - entity.name
     extends: ;
 //  ^^^^^^^ storage.modifier.extends.php - entity.name
     final: ;
@@ -2859,11 +2965,17 @@ try {
 // <- keyword.control.exception
     echo inverse(5) . "\n";
     throw new \Exception('Error!');
+//        ^^^^ meta.instantiation.php
+//            ^^^^^^^^^^ meta.instantiation.php meta.function-call.identifier.php meta.path.php
+//                      ^^^^^^^^^^ meta.instantiation.php meta.function-call.arguments.php meta.group.php
 //  ^^^^^ keyword.control.flow.throw.php
 //            ^^^^^^^^^^ meta.path.php
 //            ^ punctuation.accessor.namespace.php - support.class
 //             ^^^^^^^^^ support.class.builtin.php
     throw new \Custom\Exception('Error!');
+//        ^^^^ meta.instantiation.php
+//            ^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.function-call.identifier.php meta.path.php
+//                             ^^^^^^^^^^ meta.instantiation.php meta.function-call.arguments.php meta.group.php
 //  ^^^^^ keyword.control.flow.throw.php
 //            ^^^^^^^^^^^^^^^^^ meta.path.php
 //            ^ punctuation.accessor.namespace.php
@@ -3167,6 +3279,21 @@ define("MY_CONST", value);
 //                       ^ punctuation.section.group.end.php
 //                        ^ punctuation.terminator.statement.php
 
+die ;
+// <- meta.function-call.identifier.php support.function.builtin.php
+//^^ meta.function-call.identifier.php
+//^ support.function.builtin.php
+// ^ meta.function-call.identifier.php
+//  ^ punctuation.terminator.statement.php
+
+die();
+// <- meta.function-call.identifier.php support.function.builtin.php
+//^ meta.function-call.identifier.php support.function.builtin.php
+// ^^ meta.function-call.arguments.php meta.group.php
+// ^ punctuation.section.group.begin.php
+//  ^ punctuation.section.group.end.php
+//   ^ punctuation.terminator.statement.php
+
 echo ;
 // <- meta.function-call.identifier.php - meta.path.php
 //^^^ meta.function-call.identifier.php - meta.path.php
@@ -3386,22 +3513,21 @@ $statement = match ($this->lexer->lookahead['type']) {
  *****************************************************************************/
 
 $test = new Test1;
-//      ^^^^^^^^^ meta.instantiation.php
+//      ^^^^ meta.instantiation.php - meta.function-call
+//          ^^^^^ meta.instantiation.php meta.function-call.identifier.php
 //      ^ keyword.other.new.php
 //          ^^^^^ support.class.php - meta.path
 //          ^ support.class.php
 
 $anon = new readonly class{};
 //      ^^^^^^^^^^^^^^^^^^^^ - meta.class meta.class
-//      ^^^^          meta.instantiation.php - meta.class
-//          ^^^^^^^^ meta.instantiation.php storage.modifier.php - meta.class
+//      ^^^^^^^^^^^^^ meta.instantiation.php - meta.class
 //                   ^^^^^ meta.instantiation.php meta.class.php - meta.block
 //                        ^^ meta.instantiation.php meta.class.php meta.block.php
 //                          ^ - meta.instantiation - meta.class - meta.block
 //      ^ keyword.other.new.php
-//                   ^ keyword.declaration.class
-//                        ^^ meta.class.php
-//                        ^^ meta.block.php
+//          ^^^^^^^^ storage.modifier.php
+//                   ^^^^^ keyword.declaration.class.php
 //                        ^ punctuation.section.block.begin.php
 //                         ^ punctuation.section.block.end.php
 
@@ -3417,9 +3543,9 @@ $anon = new class};
 $anon = new class ( {};
 //      ^^^^^^^^^^^^^^ - meta.class meta.class
 //      ^^^^ meta.instantiation.php - meta.class
-//          ^^^^^^ meta.instantiation.php meta.class.php - meta.block - meta.group
-//                ^^ meta.instantiation.php meta.class.php meta.group.php - meta.block
-//                  ^^ meta.instantiation.php meta.class.php meta.block.php
+//          ^^^^^^ meta.instantiation.php meta.class.php meta.function-call.identifier.php - meta.block - meta.group
+//                ^^ meta.instantiation.php meta.class.php meta.function-call.arguments.php meta.group.php - meta.block
+//                  ^^ meta.instantiation.php meta.class.php meta.block.php - meta.function-call
 //                    ^ - meta.instantiation - meta.class - meta.block
 //      ^^^ keyword.other.new.php
 //          ^^^^^ keyword.declaration.class.php
@@ -3428,10 +3554,12 @@ $anon = new class ( {};
 //                   ^ punctuation.section.block.end.php
 
 $anon = new class($param1, $param2) extends Test1 implements Countable {};
-//          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.class.php - meta.class meta.class
+//      ^^^^ meta.instantiation.php - meta.class.php - meta.function-call
+//          ^^^^^ meta.instantiation.php meta.class.php meta.function-call.identifier.php keyword.declaration.class.php
+//               ^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.class.php meta.function-call.arguments.php meta.group.php
+//                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.class.php - meta.class meta.class - meta.function-call
 //      ^ keyword.other.new.php
 //          ^ keyword.declaration.class
-//               ^^^^^^^^^^^^^^^^^^ meta.group.php
 //               ^ punctuation.section.group.begin.php
 //                ^ variable.other.php
 //                       ^ punctuation.separator.sequence
@@ -3464,9 +3592,10 @@ $anon = new /* comment */ #[anno] class($param1, $param2) extends Test1 implemen
 //                                                                                           ^^ meta.block.php
 
 $user_1 = new User("John", "a@b.com");
-//        ^^^^^^^^ meta.instantiation.php - meta.group
-//                ^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.group.php
-//                                   ^ - meta.instantiation - meta.group
+//        ^^^^ meta.instantiation.php - meta.function-call - meta.group
+//            ^^^^ meta.instantiation.php meta.function-call.identifier.php
+//                ^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.function-call.arguments.php meta.group.php
+//                                   ^ - meta.instantiation - meta.function-call - meta.group
 //        ^^^ keyword.other.new.php
 //            ^^^^ support.class.php
 //                ^ punctuation.section.group.begin.php
@@ -3479,9 +3608,10 @@ $user_1 = new User("John", "a@b.com");
 $user_1 = new /* comment */ #[anno] User("John", "a@b.com");
 //        ^^^^^^^^^^^^^^^^^^ meta.instantiation.php - meta.annotation
 //                          ^^^^^^^ meta.instantiation.php meta.annotation
-//                                 ^^^^^  meta.instantiation.php - meta.annotation - meta.group
-//                                      ^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.group.php
-//                                                         ^ - meta.instantiation - meta.group
+//                                 ^ meta.instantiation.php - meta.annotation - meta.function-call - meta.group
+//                                  ^^^^ meta.instantiation.php  meta.function-call.identifier.php - meta.annotation - meta.group
+//                                      ^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.function-call.arguments.php meta.group.php
+//                                                         ^ - meta.instantiation - meta.function-call - meta.group
 //        ^^^ keyword.other.new.php
 //            ^^^^^^^^^^^^^ comment.block.php
 //                          ^^^^^^^ meta.annotation
@@ -3496,9 +3626,10 @@ $user_1 = new /* comment */ #[anno] User("John", "a@b.com");
 $user_1 = new /* comment */ #[anno] $cls("John", "a@b.com");
 //        ^^^^^^^^^^^^^^^^^^ meta.instantiation.php - meta.annotation
 //                          ^^^^^^^ meta.instantiation.php meta.annotation
-//                                 ^^^^^  meta.instantiation.php - meta.annotation - meta.group
-//                                      ^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.group.php
-//                                                         ^ - meta.instantiation - meta.group
+//                                 ^ meta.instantiation.php - meta.annotation - meta.function-call - meta.group
+//                                  ^^^^ meta.instantiation.php  meta.function-call.identifier.php - meta.annotation - meta.group
+//                                      ^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.function-call.arguments.php meta.group.php
+//                                                         ^ - meta.instantiation - meta.function-call - meta.group
 //        ^^^ keyword.other.new.php
 //            ^^^^^^^^^^^^^ comment.block.php
 //                          ^^^^^^^ meta.annotation
@@ -3510,21 +3641,21 @@ $user_1 = new /* comment */ #[anno] $cls("John", "a@b.com");
 //                                                        ^ punctuation.section.group.end.php
 //                                                         ^ punctuation.terminator.statement.php
 
-$object = new \MyNamespce\ClassName();
+$object = new \MyNamespace\ClassName();
 // <- variable.other.php punctuation.definition.variable.php
-//        ^^^^ meta.instantiation.php - meta.path
-//            ^^^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.path.php
-//                                 ^^ meta.instantiation.php meta.group.php
+//        ^^^^ meta.instantiation.php - meta.function-call - meta.path
+//            ^^^^^^^^^^^^^^^^^^^^^^ meta.instantiation.php meta.function-call.identifier.php meta.path.php
+//                                  ^^ meta.instantiation.php meta.function-call.arguments.php meta.group.php
 //^^^^^ variable.other.php
 //      ^ keyword.operator.assignment.php
 //        ^^^ keyword.other.new.php
 //            ^ punctuation.accessor.namespace.php
-//             ^^^^^^^^^^ variable.namespace.php
-//                       ^ punctuation.accessor.namespace.php
-//                        ^^^^^^^^^ support.class.php
-//                                 ^ punctuation.section.group.begin.php
-//                                  ^ punctuation.section.group.end.php
-//                                   ^ punctuation.terminator.statement.php
+//             ^^^^^^^^^^^ variable.namespace.php
+//                        ^ punctuation.accessor.namespace.php
+//                         ^^^^^^^^^ support.class.php
+//                                  ^ punctuation.section.group.begin.php
+//                                   ^ punctuation.section.group.end.php
+//                                    ^ punctuation.terminator.statement.php
 
 // class name should be case-insensitive
 $object = new ArRaYoBjEcT();
@@ -3641,6 +3772,9 @@ $foo = (unset) $bar;
 /******************************************************************************
  * Operators Tests
  *****************************************************************************/
+
+   |>
+// ^^ keyword.operator.assignment.pipe.php
 
     += -= *= /= %= &= |= ^= >>= <<= .= ??=
 // ^ - keyword
@@ -5174,21 +5308,21 @@ $sql = "CREATE TABLE version";
 //     ^ meta.string.php string.quoted.double.php punctuation.definition.string.begin.php - meta.interpolation - string string
 //      ^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - string.quoted.double.php
 //                          ^ meta.string.php string.quoted.double.php punctuation.definition.string.end.php - meta.interpolation - string string
-//      ^^^^^^ keyword.other.create.sql
+//      ^^^^^^ keyword.other.ddl.sql
 
 $sql = "
     CREATE TABLE `version`...
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - string.quoted.double.php
-//  ^^^^^^ keyword.other.create.sql
+//  ^^^^^^ keyword.other.ddl.sql
 ";
 
 // Do not highlight plain SQL indicator as SQL
 $sql = "SELECT";
-//      ^^^^^^ - keyword.other.DML
+//      ^^^^^^ - keyword.other.dml
 
 $sql = "
     SELECT
-//  ^^^^^^ keyword.other.DML
+//  ^^^^^^ keyword.other.dml
     *
     FROM users
     WHERE first_name = 'Eric'
@@ -5197,7 +5331,7 @@ $sql = "
 $sql = "SELECT * FROM users WHERE first_name = 'Eric'";
 //     ^ meta.string.php string.quoted.double.php punctuation.definition.string.begin.php - meta.interpolation - string string
 //      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - string.quoted.double.php
-//      ^ keyword.other.DML
+//      ^ keyword.other.dml
 //                                             ^^^^^^ string.quoted.single.sql
 //                                                   ^ meta.string.php string.quoted.double.php punctuation.definition.string.end.php - meta.interpolation - string string
 
@@ -5205,26 +5339,38 @@ $sql = "SELECT * FROM users WHERE first_name = 'Eric'";
 $sql = "SELECT * FROM users WHERE first_name = 'Eric";
 //     ^ meta.string.php string.quoted.double.php punctuation.definition.string.begin.php - meta.interpolation - string string
 //      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - string.quoted.double.php
-//      ^ keyword.other.DML
+//      ^ keyword.other.dml
 //                                             ^^^^^ string.quoted.single.sql
 //                                                  ^ meta.string.php string.quoted.double.php punctuation.definition.string.end.php - meta.interpolation - string string
 
 $sql = "
     SELECT * FROM users WHERE first_name = 'Eric'
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - string.quoted.double.php
-//  ^ keyword.other.DML
+//  ^ keyword.other.dml
+//                      ^^^^^ keyword.other.dml.sql
 //                                         ^^^^^^ string.quoted.single.sql
 ";
 // <- meta.string.php string.quoted.double.php punctuation.definition.string.end.php - meta.interpolation - string string
 
+$sql = "SELECT `$col` FROM 'my$table--name'";
+//             ^^^^^^ meta.column-name.sql
+//             ^ punctuation.definition.identifier.begin.sql
+//              ^^^^ meta.interpolation.php variable.other.php
+//                  ^ punctuation.definition.identifier.end.sql
+//                    ^^^^ keyword.other.dml.sql
+//                         ^^^^^^^^^^^^^^^^ meta.table-name.sql
+//                         ^ punctuation.definition.identifier.begin.sql
+//                            ^^^^^^ meta.interpolation.php variable.other.php
+//                                        ^ punctuation.definition.identifier.end.sql
+
 $sql = "SELECT * FROM users where first_name = $user_name";
 //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php - meta.interpolation
-//                                             ^^^^^^^^^^ meta.string.php meta.interpolation.php variable.other.php - string
+//                                             ^^^^^^^^^^ meta.string.php meta.interpolation.php variable.other.php - string.quoted.double
 //                                                       ^ meta.string.php - meta.interpolation
 
 $sql = "SELECT * FROM users where first_name = '$user_name'";
 //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php - meta.interpolation
-//                                              ^^^^^^^^^^ meta.string.php meta.interpolation.php variable.other.php - string
+//                                              ^^^^^^^^^^ meta.string.php meta.interpolation.php variable.other.php - string.quoted
 //                                                        ^ meta.string.php - meta.interpolation
 
 $sql = "SELECT * FROM users where first_name = `$user_name`";
@@ -5253,22 +5399,12 @@ $sql = "SELECT " . $col . "FROM $table WHERE ( first_name =" . $name . ")" ; . "
 //             ^ meta.string.php - meta.interpolation
 //              ^^^^^^^^^^ - meta.string
 //                        ^ meta.string.php - meta.interpolation
-//                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php
-//                                                         ^ meta.string.php - meta.interpolation
-//                                                          ^^^^^^^^^^^ - meta.string
-//                                                                     ^ meta.string.php - meta.interpolation
-//                                                                      ^ meta.string.php source.sql.embedded.php
-//                                                                       ^ meta.string.php - meta.interpolation
-//                                                                        ^^^^^ - meta.string
-//                                                                             ^^^^^^^^^^ meta.string.php string.quoted.double.php - meta.interpolation
-//     ^ string.quoted.double.php punctuation.definition.string.begin.php
-//      ^^^^^^ keyword.other.DML.sql
-//             ^ string.quoted.double.php punctuation.definition.string.end.php
-//               ^ keyword.operator.concatenation.php
-//                 ^^^^ variable.other.php
-//                      ^ keyword.operator.concatenation.php
-//                        ^ string.quoted.double.php punctuation.definition.string.begin.php
-//                              ^^^^^^ variable.other.php
+//                         ^^^^^ meta.string.php source.sql.embedded.php - meta.interpolation
+//                              ^^^^^^ meta.string.php source.sql.embedded.php meta.table-name.sql meta.interpolation.php
+//                                    ^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - meta.interpolation
+//                                           ^ punctuation.section.group.begin.sql
+//                                             ^^^^^^^^^^ meta.column-name.sql - variable
+//                                                        ^ keyword.operator.comparison.sql
 //                                                         ^ string.quoted.double.php punctuation.definition.string.end.php
 //                                                           ^ keyword.operator.concatenation.php
 //                                                             ^^^^^ variable.other.php
@@ -5278,6 +5414,27 @@ $sql = "SELECT " . $col . "FROM $table WHERE ( first_name =" . $name . ")" ; . "
 //                                                                         ^ punctuation.terminator.statement.php
 //                                                                           ^ keyword.operator.concatenation.php
 //                                                                                        ^ punctuation.terminator.statement.php
+
+$sql = "SELECT a WHERE id = $id -- id: $id";
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ text.html.php meta.embedded.php source.php.embedded.html
+//^^ variable.other.php
+//   ^ keyword.operator.assignment.php
+//     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php
+//     ^ string.quoted.double.php punctuation.definition.string.begin.php
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.sql.embedded.php
+//      ^^^^^^ keyword.other.dml.sql
+//             ^ meta.column-name.sql
+//               ^^^^^ keyword.other.dml.sql
+//                     ^^ meta.column-name.sql
+//                        ^ keyword.operator.comparison.sql
+//                          ^^^ meta.interpolation.php variable.other.php
+//                          ^ punctuation.definition.variable.php
+//                              ^^^^^^^^^^ comment.line.double-dash.sql
+//                              ^^ punctuation.definition.comment.sql
+//                                     ^^^ meta.interpolation.php variable.other.php
+//                                     ^ punctuation.definition.variable.php
+//                                        ^ string.quoted.double.php punctuation.definition.string.end.php
+//                                         ^ punctuation.terminator.statement.php
 
 $sql = "DROP TABLE foo";
 //     ^ meta.string.php string.quoted.double.php punctuation.definition.string.begin.php
@@ -5314,7 +5471,7 @@ $non_sql = 'NO SELECT HIGHLIGHTING!';
 $sql = 'SELECT * FROM users WHERE first_name = \'Eric\'';
 //     ^ meta.string.php string.quoted.single.php punctuation.definition.string.begin.php - meta.interpolation - string string
 //      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - string.quoted.single.php
-//      ^ keyword.other.DML
+//      ^ keyword.other.dml
 //                                             ^^^^^^^^ meta.string.sql string.quoted.single.sql
 //                                             ^^ constant.character.escape.php
 //                                                   ^^ constant.character.escape.php
@@ -5323,7 +5480,7 @@ $sql = 'SELECT * FROM users WHERE first_name = \'Eric\'';
 $sql = '
     SELECT * FROM users WHERE first_name = \'Eric\'
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.php source.sql.embedded.php - string.quoted.single.php
-//  ^ keyword.other.DML
+//  ^ keyword.other.dml
 //                                         ^^ constant.character.escape.php
 ';
 // <- meta.string.php string.quoted.single.php punctuation.definition.string.end.php - meta.interpolation - string string
@@ -5343,7 +5500,7 @@ $sql = 'SELECT ' . $col . 'FROM table WHERE ( first_name =' . $name . ')' ; . 'G
 //                                                                       ^^^^^ - meta.string
 //                                                                            ^^^^^^^^^^ meta.string.php string.quoted.single.php - meta.interpolation
 //     ^ string.quoted.single.php punctuation.definition.string.begin.php
-//      ^^^^^^ keyword.other.DML.sql
+//      ^^^^^^ keyword.other.dml.sql
 //             ^ string.quoted.single.php punctuation.definition.string.end.php
 //               ^ keyword.operator.concatenation.php
 //                 ^^^^ variable.other.php
@@ -5540,7 +5697,7 @@ echo <<<sql
 //      ^^^ entity.name.tag.heredoc
 SELECT * FROM users WHERE first_name = 'John' LIMIT $limit
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.embedded.sql source.sql.embedded.php
-// <- keyword.other.DML
+// <- keyword.other.dml
 //     ^ constant.other.wildcard.asterisk
 //                                     ^^^^^^ string.quoted.single
 //                                                  ^^^^^^ variable.other.php
@@ -5557,7 +5714,7 @@ echo <<<'SQL'
 //       ^^^ entity.name.tag.heredoc
 SELECT * FROM users WHERE first_name = 'John'\n
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.embedded.sql source.sql.embedded.php
-// <- keyword.other.DML
+// <- keyword.other.dml
 //     ^ constant.other.wildcard.asterisk
 //                                     ^^^^^^ string.quoted.single
 //                                           ^^ - constant.character.escape.php
@@ -5883,7 +6040,7 @@ function embedHtml() {
 <script>
 //^^^^^^ text.html.php meta.tag
     var foo = 4;
-// ^^^^^^^^^^^^^^ source.js.embedded
+// ^^^^^^^^^^^^^^ source.js.embedded - meta.embedded - meta.interpolation
 //  ^ keyword.declaration
 //      ^^^ variable.other.readwrite
 //          ^ keyword.operator
@@ -6068,28 +6225,32 @@ h1 {
 </style>
 
 <p style="color: <?php echo "red" ?>">text</p>
-//       ^ meta.attribute-with-value.style.html meta.string.html string.quoted.double.html punctuation.definition.string.begin.html - meta.interpolation
-//        ^^^^^^^ meta.attribute-with-value.style.html meta.string.html meta.interpolation.html source.css.embedded.html - meta.embedded.php
-//               ^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.style.html meta.string.html meta.interpolation.html source.css.embedded.html meta.embedded.php
-//                                  ^ meta.attribute-with-value.style.html meta.string.html string.quoted.double.html punctuation.definition.string.end.html - meta.interpolation
+//       ^ meta.attribute-with-value.style.html meta.string.html string.quoted.double.html punctuation.definition.string.begin.html - source
+//        ^^^^^^^ meta.attribute-with-value.style.html meta.string.html source.css.embedded.html - meta.embedded.php - meta.interpolation
+//               ^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.style.html meta.string.html source.css.embedded.html meta.embedded.php - meta.interpolation
+//                                  ^ meta.attribute-with-value.style.html meta.string.html string.quoted.double.html punctuation.definition.string.end.html - source
 //                                   ^ text.html.php meta.tag.block.any.html punctuation.definition.tag.end.html
 
 <p style='color: <?php echo 'red' ?>'>text</p>
-//       ^ meta.attribute-with-value.style.html meta.string.html string.quoted.single.html punctuation.definition.string.begin.html - meta.interpolation
-//        ^^^^^^^ meta.attribute-with-value.style.html meta.string.html meta.interpolation.html source.css.embedded.html - meta.embedded.php
-//               ^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.style.html meta.string.html meta.interpolation.html source.css.embedded.html meta.embedded.php
-//                                  ^ meta.attribute-with-value.style.html meta.string.html string.quoted.single.html punctuation.definition.string.end.html - meta.interpolation
+//       ^ meta.attribute-with-value.style.html meta.string.html string.quoted.single.html punctuation.definition.string.begin.html - source
+//        ^^^^^^^ meta.attribute-with-value.style.html meta.string.html source.css.embedded.html - meta.embedded.php - meta.interpolation
+//               ^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.style.html meta.string.html source.css.embedded.html meta.embedded.php - meta.interpolation
+//                                  ^ meta.attribute-with-value.style.html meta.string.html string.quoted.single.html punctuation.definition.string.end.html - source
 //                                   ^ text.html.php meta.tag.block.any.html punctuation.definition.tag.end.html
 
 <p onclick="foo(<?php echo "red" ?>)">text</p>
-//         ^ meta.attribute-with-value.event.html meta.string.html string.quoted.double.html punctuation.definition.string.begin.html - meta.interpolation
-//          ^^^^^^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.event.html meta.string.html meta.interpolation.html source.js.embedded.html meta.function-call
-//                                  ^ meta.attribute-with-value.event.html meta.string.html string.quoted.double.html punctuation.definition.string.end.html - meta.interpolation
+//         ^ meta.attribute-with-value.event.html meta.string.html string.quoted.double.html punctuation.definition.string.begin.html - source
+//          ^^^^ meta.attribute-with-value.event.html meta.string.html source.js.embedded.html meta.function-call - meta.embedded - meta.interpolation
+//              ^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.event.html meta.string.html source.js.embedded.html meta.function-call meta.embedded.php - meta.interpolation
+//                                 ^ meta.attribute-with-value.event.html meta.string.html source.js.embedded.html meta.function-call - meta.embedded - meta.interpolation
+//                                  ^ meta.attribute-with-value.event.html meta.string.html string.quoted.double.html punctuation.definition.string.end.html - source
 
 <p onclick='foo(<?php echo 'red' ?>)'>text</p>
-//         ^ meta.attribute-with-value.event.html meta.string.html string.quoted.single.html punctuation.definition.string.begin.html - meta.interpolation
-//          ^^^^^^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.event.html meta.string.html meta.interpolation.html source.js.embedded.html meta.function-call
-//                                  ^ meta.attribute-with-value.event.html meta.string.html string.quoted.single.html punctuation.definition.string.end.html - meta.interpolation
+//         ^ meta.attribute-with-value.event.html meta.string.html string.quoted.single.html punctuation.definition.string.begin.html - source
+//          ^^^^ meta.attribute-with-value.event.html meta.string.html source.js.embedded.html meta.function-call - meta.embedded - meta.interpolation
+//              ^^^^^^^^^^^^^^^^^^^ meta.attribute-with-value.event.html meta.string.html source.js.embedded.html meta.function-call meta.embedded.php - meta.interpolation
+//                                 ^ meta.attribute-with-value.event.html meta.string.html source.js.embedded.html meta.function-call - meta.embedded - meta.interpolation
+//                                  ^ meta.attribute-with-value.event.html meta.string.html string.quoted.single.html punctuation.definition.string.end.html - source
 
 <![CDATA[Text with <? $php ?> interpolation.]]>
 //       ^^^^^^^^^^ meta.tag.sgml.cdata.html meta.string.html string.unquoted.cdata.html

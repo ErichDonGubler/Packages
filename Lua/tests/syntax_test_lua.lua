@@ -87,6 +87,14 @@
 -- no more doc comment after empty line
 -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - comment.line.documentation
 
+--- Another doc comment
+    --[=[ block comments after should work with an equals
+--  ^^^^^ comment.block punctuation.definition.comment.begin
+    commented
+--  ^^^^^^^^^ comment.block
+    ]=]
+--  ^^^ comment.block punctuation.definition.comment.end
+
 -----------------
 --^^^^^^^^^^^^^^^ comment.line.documentation.lua punctuation.definition.comment.lua
 -- This will also do.
@@ -134,6 +142,75 @@
     --[[
 --  ^^^^ comment.block.lua punctuation.definition.comment.begin.lua - comment.line
     ]]
+
+--
+-- Merge Conflict Marker Tests
+--
+
+--[[ Merge conflicts in comments
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+]]
+
+--[=[ Merge conflicts in docblock comments
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+]=]
+
+-- Top-level merge conflicts
+
+<<<<<<< HEAD
+-- <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+--^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+--     ^ meta.block.conflict.begin.diff - entity - punctuation
+--      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+--          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+-- <- meta.block.conflict.separator.diff punctuation.section.block.diff
+--^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+--     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+-- <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+--^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+--     ^ meta.block.conflict.end.diff - entity - punctuation
+--      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+--            ^ meta.block.conflict.end.diff - entity - punctuation
 
 --VARIABLES
 
@@ -720,6 +797,15 @@
 --                 ^ keyword.operator.assignment
 --                   ^ meta.number.integer.decimal constant.numeric.value
 --                    ^ punctuation.terminator.statement
+
+    a, b = c, d
+--  ^ variable.other
+--   ^ punctuation.separator.comma
+--     ^ variable.other
+--       ^ keyword.operator.assignment
+--         ^ variable.other
+--          ^ punctuation.separator.comma
+--            ^ variable.other
 
     local x <const>, y <  const  > = 1, 2;
 --  ^^^^^ storage.modifier.lua

@@ -1,5 +1,52 @@
 % SYNTAX TEST "Packages/Matlab/Matlab.sublime-syntax"
 
+%---------------------------------------------
+% Merge Conflict Markers
+
+%{
+
+  Merge conflicts in comments
+
+<<<<<<< HEAD
+%  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+% ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+%      ^ meta.block.conflict.begin.diff - entity - punctuation
+%       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+%           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+%  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+% ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+%      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+%  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+% ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+%      ^ meta.block.conflict.end.diff - entity - punctuation
+%       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+%             ^ meta.block.conflict.end.diff - entity - punctuation
+%}
+
+% Top-level merge conflicts
+
+<<<<<<< HEAD
+%  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+% ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+%      ^ meta.block.conflict.begin.diff - entity - punctuation
+%       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+%           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+%  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+% ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+%      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+%  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+% ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+%      ^ meta.block.conflict.end.diff - entity - punctuation
+%       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+%             ^ meta.block.conflict.end.diff - entity - punctuation
 
 %---------------------------------------------
 % Matlab OOP
@@ -65,7 +112,7 @@ classdef (Sealed = verLessThan('matlab', '8.4'), ~Hidden) ClassName < SuperClass
 %           ^^^^^^ variable.parameter.attribute.matlab
 %                 ^ punctuation.section.parens.end.matlab
 %                    ^^^^^^^^^^ comment.line.percentage.matlab
-      function funcionName(obj)
+      function functionName(obj)
          functionName@SuperClass1(obj)
 %                    ^ punctuation.accessor.at.matlab - keyword.operator
       end
@@ -279,7 +326,7 @@ end
 %^^ meta.function.matlab keyword.declaration.function.end.matlab
 %  ^ - meta.function
 
-function [one, two, three] = myFunction(x)  % funtion with more than one output
+function [one, two, three] = myFunction(x)  % function with more than one output
 %^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.matlab
 %                                      ^^^ meta.function.parameters.matlab - meta.function meta.function
 %^^^^^^^ keyword.declaration.function.matlab

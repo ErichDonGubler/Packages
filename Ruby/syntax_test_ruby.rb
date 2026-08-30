@@ -28,6 +28,71 @@
 #   ^^^^^^^^^ comment.line.number-sign.ruby - punctuation
 
 ##################
+# Merge Conflicts
+##################
+
+=begin
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+=end
+
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+
+puts <<~EOF; # comment
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+EOF
+
+##################
 # Heredocs
 ##################
 
@@ -278,10 +343,26 @@ DB.fetch(<<-SQL, conn).name
 #              ^^^^^^^^^^^^ - meta.string - string
 #              ^ punctuation.separator
 #                    ^ punctuation.definition.group.end
-SELECT * FROM #$users;
+SELECT * FROM #$users WHERE name = 'Mr. #$family';
 #^^^^^^^^^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby - meta.interpolation
 #             ^^^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby meta.interpolation.ruby variable.other.readwrite.global
-#                    ^ meta.string.heredoc.ruby source.sql.embedded.ruby - meta.interpolation
+#                    ^^^^^^^^^^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby - meta.string.sql - meta.interpolation
+#                                  ^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby meta.string.sql string.quoted.single.sql - meta.interpolation
+#                                       ^^^^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby meta.string.sql meta.interpolation.ruby variable.other.readwrite.global.ruby
+#                                               ^ meta.string.heredoc.ruby source.sql.embedded.ruby meta.string.sql string.quoted.single.sql - meta.interpolation
+-- id: #{id}
+#^^^^^^^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby comment.line.double-dash.sql
+#^ punctuation.definition.comment.sql
+#      ^^^^^ meta.interpolation.ruby
+#      ^^ punctuation.section.interpolation.begin.ruby
+#        ^^ source.ruby.embedded.ruby
+#          ^ punctuation.section.interpolation.end.ruby
+#{no_comment}
+# <- meta.string.heredoc.ruby source.sql.embedded.ruby meta.interpolation.ruby punctuation.section.interpolation.begin.ruby
+#^^^^^^^^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby meta.interpolation.ruby
+#^ punctuation.section.interpolation.begin.ruby
+# ^^^^^^^^^^ source.ruby.embedded.ruby
+#           ^ punctuation.section.interpolation.end.ruby
 SQL
 #^^ meta.string.heredoc.ruby meta.tag.heredoc.ruby entity.name.tag.ruby
 #  ^ - meta.string - string.unquoted
@@ -409,6 +490,10 @@ CONST << 10
 #^^ meta.number.integer.decimal.ruby constant.numeric.value.ruby
 #  ^ punctuation.accessor - constant.numeric - invalid.illegal
 #   ^^ - constant.numeric - invalid.illegal - storage.type.numeric
+ 12&.ir
+#^^ meta.number.integer.decimal.ruby constant.numeric.value.ruby
+#  ^^ punctuation.accessor - constant.numeric - invalid.illegal - keyword.operator
+#    ^^ - constant.numeric - invalid.illegal - storage.type.numeric
 
  12.34
 #^^^^^ meta.number.float.decimal.ruby constant.numeric.value.ruby
@@ -978,12 +1063,14 @@ module: 'module'
 # ^ punctuation.terminator.statement.ruby
   .
 # ^ punctuation.accessor.dot.ruby
+  &.
+# ^^ punctuation.accessor.dot.ruby
   ::
 # ^^ punctuation.accessor.double-colon.ruby
   <<=
 # ^^^ keyword.operator.assignment.augmented.ruby
   &&=
-# ^^^ keyword.operator.assignment.augmented.ruby
+# ^^^ keyword.operator.assignment.augmented.ruby - punctuation
   ||=
 # ^^^ keyword.operator.assignment.augmented.ruby
   **=
@@ -1037,7 +1124,7 @@ module: 'module'
   <
 # ^ keyword.operator.comparison.ruby
   &&
-# ^^ keyword.operator.logical.ruby
+# ^^ keyword.operator.logical.ruby - punctuation
   ||
 # ^^ keyword.operator.logical.ruby
   !
@@ -1049,7 +1136,7 @@ module: 'module'
   ~
 # ^ keyword.operator.bitwise.ruby
   &
-# ^ keyword.operator.bitwise.ruby
+# ^ keyword.operator.bitwise.ruby - punctuation
   |
 # ^ keyword.operator.bitwise.ruby
   ^
@@ -1064,7 +1151,7 @@ module: 'module'
 ##################
 
 [self.class.name, @name].map do |*args|
-# ^ variable.language.ruby
+#^^^^ variable.language.this.ruby
 #                 ^ variable.other.readwrite.instance.ruby punctuation.definition.variable.ruby
 #                  ^^^^ variable.other.readwrite.instance.ruby
 #                                ^ keyword.operator.splat.ruby
@@ -1159,14 +1246,14 @@ class ::MyModule::MyClass < MyModule::InheritedClass
   class <<self
 # ^^^^^ keyword.declaration.class.ruby
 #       ^^ keyword.operator.assignment.augmented.ruby
-#         ^^^^ variable.language.ruby
+#         ^^^^ variable.language.this.ruby
   end
 # ^^^ keyword.control.block.end.ruby
 
   class << self
 # ^^^^^ keyword.declaration.class.ruby
 #       ^^ keyword.operator.assignment.augmented.ruby
-#          ^^^^ variable.language.ruby
+#          ^^^^ variable.language.this.ruby
   end
 # ^^^ keyword.control.block.end.ruby
 
@@ -1531,6 +1618,22 @@ end
 
 ['a()', 'b()'].select { |var| /^a\(/ =~ var }
 #                             ^^^^^^ string.regexp
+#                                    ^^ keyword.operator.comparison.ruby
+#                                           ^ punctuation.section.scope
+
+['a()', 'b()'].select { /^a\(/ =~ var }
+#                       ^^^^^^ string.regexp
+#                              ^^ keyword.operator.comparison.ruby
+#                                     ^ punctuation.section.scope
+
+# issue 3817
+let(:error_msg) { /can't be blank/ }
+#                 ^^^^^^^^^^^^^^^^ string.regexp
+#                                  ^ punctuation.section.scope
+
+let(:error_msg) { |var| /can't be blank/ }
+#                       ^^^^^^^^^^^^^^^^ string.regexp
+#                                        ^ punctuation.section.scope
 
 {foo: /bar/}
 #     ^^^^^ string.regexp
@@ -1556,6 +1659,55 @@ rule /`/ do
 #    ^ - string.regexp string.regexp
 #        ^^ keyword.control.block.do
 end
+
+case 1
+#^^^ keyword.control.conditional.case.ruby
+#    ^ meta.number.integer.decimal.ruby constant.numeric.value.ruby
+  in 0..10
+# ^^ keyword.operator.logical.ruby
+#    ^ meta.number.integer.decimal.ruby constant.numeric.value.ruby
+#     ^^ keyword.operator.range.ruby
+#       ^^ meta.number.integer.decimal.ruby constant.numeric.value.ruby
+    true
+  else
+# ^^^^ keyword.control.conditional.if.ruby
+    false
+end
+#^^ keyword.control.block.end.ruby
+
+for do
+#^^ keyword.control.loop.for.ruby
+#   ^^ keyword.control.block.do.ruby
+end
+#^^ keyword.control.block.end.ruby
+
+for item in items do
+#^^ keyword.control.loop.for.ruby
+#        ^^ keyword.control.loop.in.ruby
+#                 ^^ keyword.control.block.do.ruby
+end
+#^^ keyword.control.block.end.ruby
+
+unless item in items do
+#^^^^^ keyword.control.conditional.unless.ruby
+#           ^^ keyword.operator.logical.ruby
+#                    ^^ keyword.control.block.do.ruby
+end
+#^^ keyword.control.block.end.ruby
+
+until item in items do
+#^^^^ keyword.control.loop.until.ruby
+#          ^^ keyword.operator.logical.ruby
+#                   ^^ keyword.control.block.do.ruby
+end
+#^^ keyword.control.block.end.ruby
+
+while item in items do
+#^^^^ keyword.control.loop.while.ruby
+#          ^^ keyword.operator.logical.ruby
+#                   ^^ keyword.control.block.do.ruby
+end
+#^^ keyword.control.block.end.ruby
 
 ##################
 # Crazy Stuff Found Online™
@@ -1613,3 +1765,52 @@ foo << bar.assert_match if baz.include?(x)
 #                       ^^ keyword.control.conditional.if.ruby
 foo << bar.to_s if baz.include?(x)
 #               ^^ keyword.control.conditional.if.ruby
+
+_query = <<-SQL
+  INSERT INTO table
+#^^^^^^^^^^^^^^^^^^ meta.string.heredoc.ruby source.sql.embedded.ruby
+# ^^^^^^^^^^^ keyword.other.dml.sql
+#             ^^^^^ meta.table-name.sql
+  VALUES (1, 2, 3)
+SQL
+
+__END__
+# <- keyword.control.flow.end.ruby
+# ^^^^^ keyword.control.flow.end.ruby
+
+# no more syntax highlighting after __END__
+# <- text.plain - source - comment
+
+__END__
+# <- text.plain - source - entity
+#^^^^^^ text.plain - source - entity
+
+  if end
+# ^^^^^^ text.plain - keyword
+
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+
+<html>
+# <- text.html meta.tag.structure.any.html punctuation.definition.tag.begin.html
+#^^^^^ meta.tag.structure.any.html
+#^^^^ entity.name.tag.structure.any.html
+#    ^ punctuation.definition.tag.end.html
+
+# <- text.html - text.plain

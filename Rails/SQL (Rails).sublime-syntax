@@ -2,6 +2,7 @@
 ---
 name: SQL (Rails)
 scope: source.sql.rails
+version: 2
 
 extends: Packages/SQL/SQL.sublime-syntax
 
@@ -14,3 +15,15 @@ contexts:
   prototype:
     - meta_prepend: true
     - include: HTML (Rails).sublime-syntax#rails-embedded
+
+  comment-prototype:
+    - meta_prepend: true
+    - include: HTML (Rails).sublime-syntax#rails-embedded
+
+  identifier-prototype:
+    - meta_prepend: true
+    - include: HTML (Rails).sublime-syntax#rails-embedded
+
+  string-prototype:
+    - meta_prepend: true
+    - include: HTML (Rails).sublime-syntax#rails-interpolations

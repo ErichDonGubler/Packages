@@ -24,6 +24,29 @@ multiline comment
 #^^^^^^^^^^^^^^^^^ comment.line.number-sign.makefile
 
 #################################
+# Merge Conflict Markers        #
+#################################
+
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+
+#################################
 # 6.3.1 substitution references #
 #################################
 
@@ -149,6 +172,14 @@ endef   # comment
 #^^^^ keyword.control.makefile
 #       ^^^ comment.line.number-sign.makefile
 
+# Avoid false positives such as partial matches.
+
+foodefine
+#^^^^^^^^^ - keyword
+
+definefoo
+#^^^^^^^^^ - keyword
+
 #########################
 # 6.5 setting variables #
 #########################
@@ -232,6 +263,26 @@ override \
 endef
 # <- keyword.control.makefile
 
+
+#############################
+# 6.11 undefining variables #
+#############################
+
+undefine foo
+#^^^^^^^ keyword.control.makefile
+#       ^^^^ -keyword
+
+  undefine foo
+# ^^^^^^^^ keyword.control.makefile
+#         ^^^^ -keyword
+
+# Avoid false positives such as partial matches.
+
+undefined
+#^^^^^^^^^ - keyword
+
+nundefine
+#^^^^^^^^^ - keyword
 
 ########################################
 # 6.11 target-specific variable values #
@@ -384,7 +435,7 @@ lib: foo.o bar.o lose.o win.o
 	# <- meta.function.body
 	# BIG NOTE: This comment is actually a shell comment, not a makefile
 	# comment. Everything on a recipe line is passed to the shell; even lines
-	# starting with a numbrer sign! It depends on the particular shell if it
+	# starting with a number sign! It depends on the particular shell if it
 	# gets treated as comments, but for all intents and purposes it should.
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -542,7 +593,7 @@ export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
 .RECIPEPREFIX +=
 
 help::
-	@echo "Excutable is $(EXECUTABLE)"
+	@echo "Executable is $(EXECUTABLE)"
 	# <- constant.language
 
 $(warning he:llo)
@@ -1001,7 +1052,7 @@ TESTTOOL = sh -c '\
   fi' TESTTOOL
 # ^^^ meta.string.makefile meta.interpolation.makefile
 #    ^^^^^^^^^ meta.string.makefile string.unquoted.makefile - meta.interpolation
-# ^^ source.shell.embedded keyword.control.conditional.end.shell - source.shell source.shell
+# ^^ source.shell.embedded keyword.control.conditional.endif.shell - source.shell source.shell
 #   ^ punctuation.section.interpolation.end.makefile
 
 
@@ -1021,7 +1072,7 @@ html:
 shell_string_interpolation:
     var1="double nquoted $(string) value"
     #    ^^^^^^^^^^^^^^^^ string.quoted.double.shell
-    #    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.body.makefile source.shell.embedded.makefile meta.string.shell
+    #    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.body.makefile source.shell.embedded.makefile meta.string.glob.shell
     #                    ^^^^^^^^^ meta.interpolation
     #                    ^^ keyword.other.block.begin.makefile
     #                      ^^^^^^ variable.parameter.makefile
@@ -1029,7 +1080,7 @@ shell_string_interpolation:
     #                             ^^^^^^^ string.quoted.double.shell
     var1='single nquoted $(string) value'
     #    ^^^^^^^^^^^^^^^^ string.quoted.single.shell
-    #    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.body.makefile source.shell.embedded.makefile meta.string.shell
+    #    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.body.makefile source.shell.embedded.makefile meta.string.glob.shell
     #                    ^^^^^^^^^ meta.interpolation
     #                    ^^ keyword.other.block.begin.makefile
     #                      ^^^^^^ variable.parameter.makefile
@@ -1037,7 +1088,7 @@ shell_string_interpolation:
     #                             ^^^^^^^ string.quoted.single.shell
     var1=unquoted\ $(string)\ value
     #    ^^^^^^^^^^ string.unquoted.shell
-    #    ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.body.makefile source.shell.embedded.makefile meta.string.shell
+    #    ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.body.makefile source.shell.embedded.makefile meta.string.glob.shell
     #              ^^^^^^^^^ meta.interpolation
     #              ^^ keyword.other.block.begin.makefile
     #                ^^^^^^ variable.parameter.makefile
@@ -1059,13 +1110,13 @@ foo:
 	#   ^ constant.character.escape.makefile
 	#    ^ punctuation
 	#     ^ punctuation.section.interpolation.begin.shell
-	#      ^^^^ support.function.echo.shell
+	#      ^^^^ support.function.shell
 	#           ^ constant.character.escape.makefile
 	#            ^ punctuation.definition.variable.shell
-	#            ^^^^^ variable.other.readwrite.shell
+	#            ^^^^^ variable.language.builtin.shell
 
 	test "$$abc" = "$$def"
-	# ^ support.function.test.shell
+	# ^ support.function.shell
 	#    ^^^^^^^ string.quoted.double.shell
 	#     ^ constant.character.escape.makefile
 	#      ^ punctuation.definition.variable.shell

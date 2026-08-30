@@ -91,6 +91,49 @@
 // <- comment.line.other punctuation.definition.comment
 //^^^^^^^^^^^^^^^^^^^^ comment.line.other - meta.preprocessor
 
+/* Merge conflicts in comments
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+*/
+
+/* Top-level conflicts in comments */
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+
 import foo;
 
 /// <normal comment="after first statement"/>
@@ -278,7 +321,7 @@ import foo;
 //            ^^^ entity.name.interface
 //                ^^^^^ meta.generic
 //                ^ punctuation.definition.generic.begin
-//                  ^ variable.parameter.generic
+//                  ^ variable.parameter.type
 //                    ^ punctuation.definition.generic.end
 //                      ^^^^^^^ storage.modifier.extends
 //                              ^^^ entity.other.inherited-class
@@ -361,7 +404,7 @@ import foo;
 //       ^ entity.name.type
 //         ^^^^^ meta.generic
 //         ^ punctuation.definition.generic.begin
-//           ^ variable.parameter.generic
+//           ^ variable.parameter.type
 //             ^ punctuation.definition.generic.end
 //               ^ keyword.operator.assignment
 //                 ^^^ meta.type-alias support.type.any
@@ -372,7 +415,7 @@ import foo;
 //       ^ entity.name.type
 //         ^^^^^^^^^^^ meta.generic
 //         ^ punctuation.definition.generic.begin
-//           ^ variable.parameter.generic
+//           ^ variable.parameter.type
 //             ^ keyword.operator.assignment
 //               ^^^ support.class
 //                   ^ punctuation.definition.generic.end
@@ -548,7 +591,7 @@ import foo;
 //        ^^^ entity.name.class
 //            ^^^^^ meta.generic
 //            ^ punctuation.definition.generic.begin
-//              ^ variable.parameter.generic
+//              ^ variable.parameter.type
 //                ^ punctuation.definition.generic.end
 //                  ^^^^^^^ storage.modifier.extends
 //                          ^^^ entity.other.inherited-class
@@ -688,21 +731,21 @@ function f ( @foo x , @bar() y ) {}
 function f<T, U>() {}
 //^^^^^^^^^^^^^^^^^^^ meta.function
 //        ^^^^^^ meta.generic
-//         ^ variable.parameter.generic
+//         ^ variable.parameter.type
 //          ^ punctuation.separator.comma
-//            ^ variable.parameter.generic
+//            ^ variable.parameter.type
 
 function f<const T>() {}
 //^^^^^^^^^^^^^^^^^^^^^^ meta.function
 //        ^^^^^^^^^ meta.generic
 //         ^^^^^ storage.modifier.const
-//               ^ variable.parameter.generic
+//               ^ variable.parameter.type
 
 function f(x): x is any {};
 //^^^^^^^^^^^^^^^^^^^^^^^^ meta.function
 //           ^ punctuation.separator.type
 //             ^^^^^^^^^ meta.type
-//               ^^ keyword.operator.word
+//               ^^ keyword.operator.type.is
 //                  ^^^ support.type.any
 
 function f(x): asserts x is any {};
@@ -710,7 +753,7 @@ function f(x): asserts x is any {};
 //           ^ punctuation.separator.type
 //            ^^^^^^^^^^^^^^^^^ meta.type
 //             ^^^^^^^ storage.modifier.asserts
-//                       ^^ keyword.operator.word
+//                       ^^ keyword.operator.type.is
 //                          ^^^ support.type.any
 
 function f(this : any) {}
@@ -889,7 +932,7 @@ let x: Foo<any, any>;
 
 function f<T extends Foo>() {}
 //        ^^^^^^^^^^^^^^^ meta.function meta.generic
-//         ^ variable.parameter.generic
+//         ^ variable.parameter.type
 //           ^^^^^^^ storage.modifier.extends
 //                   ^^^ support.class
 
@@ -1040,7 +1083,7 @@ let x: {
     <T>( foo : any ) : any ;
 //  ^^^ meta.generic
 //  ^ punctuation.definition.generic.begin
-//   ^ meta.generic variable.parameter.generic
+//   ^ meta.generic variable.parameter.type
 //    ^ punctuation.definition.generic.end
 //     ^ punctuation.section.group.begin
 //       ^^^ meta.binding.name variable.parameter.function
@@ -1067,7 +1110,7 @@ let x: {
 //  ^ variable.other.readwrite
 //    ^^^ meta.generic
 //    ^ punctuation.definition.generic.begin
-//     ^ meta.generic variable.parameter.generic
+//     ^ meta.generic variable.parameter.type
 //      ^ punctuation.definition.generic.end
 //       ^ punctuation.section.group.begin
 //         ^^^ meta.binding.name variable.parameter.function
@@ -1099,7 +1142,7 @@ let x: {
     new <T>( foo : any ) : any ;
 //      ^^^ meta.generic
 //      ^ punctuation.definition.generic.begin
-//       ^ meta.generic variable.parameter.generic
+//       ^ meta.generic variable.parameter.type
 //        ^ punctuation.definition.generic.end
 //         ^ punctuation.section.group.begin
 //           ^^^ meta.binding.name variable.parameter.function
@@ -1247,12 +1290,66 @@ let x: (this: any) => any;
 
 let x: < T > ( ... foo : any ) => any;
 //     ^^^^^ meta.generic
-//       ^ variable.parameter.generic
+//     ^ punctuation.definition.generic.begin
+//       ^ variable.parameter.type
+//         ^ punctuation.definition.generic.end
 //           ^^^^^^^^^^^^^^^^^ meta.group
+//           ^ punctuation.section.group.begin
 //             ^^^ keyword.operator.spread
 //                 ^^^ variable.parameter
 //                     ^ punctuation.separator.type
 //                       ^^^ support.type.any
+//                           ^ punctuation.section.group.end
+//                             ^^ keyword.declaration.function
+//                                ^^^ support.type.any
+
+let x: < const T > ( ... foo : any ) => any;
+//     ^^^^^^^^^^^ meta.generic
+//     ^ punctuation.definition.generic.begin
+//       ^^^^^ storage.modifier.const
+//             ^ variable.parameter.type
+//               ^ punctuation.definition.generic.end
+//                 ^^^^^^^^^^^^^^^^^ meta.group
+//                 ^ punctuation.section.group.begin
+//                   ^^^ keyword.operator.spread
+//                       ^^^ variable.parameter
+//                           ^ punctuation.separator.type
+//                             ^^^ support.type.any
+//                                 ^ punctuation.section.group.end
+//                                   ^^ keyword.declaration.function
+//                                      ^^^ support.type.any
+
+let x: < in T > ( ... foo : any ) => any;
+//     ^^^^^^^^ meta.generic
+//     ^ punctuation.definition.generic.begin
+//       ^^ storage.modifier.variance
+//          ^ variable.parameter.type
+//            ^ punctuation.definition.generic.end
+//              ^^^^^^^^^^^^^^^^^ meta.group
+//              ^ punctuation.section.group.begin
+//                ^^^ keyword.operator.spread
+//                    ^^^ variable.parameter
+//                        ^ punctuation.separator.type
+//                          ^^^ support.type.any
+//                              ^ punctuation.section.group.end
+//                                ^^ keyword.declaration.function
+//                                   ^^^ support.type.any
+
+let x: < out T > ( ... foo : any ) => any;
+//     ^^^^^^^^^ meta.generic
+//     ^ punctuation.definition.generic.begin
+//       ^^^ storage.modifier.variance
+//           ^ variable.parameter.type
+//             ^ punctuation.definition.generic.end
+//               ^^^^^^^^^^^^^^^^^ meta.group
+//               ^ punctuation.section.group.begin
+//                 ^^^ keyword.operator.spread
+//                     ^^^ variable.parameter
+//                         ^ punctuation.separator.type
+//                           ^^^ support.type.any
+//                               ^ punctuation.section.group.end
+//                                 ^^ keyword.declaration.function
+//                                    ^^^ support.type.any
 
 let x: () => T
     U
@@ -1360,6 +1457,16 @@ let x: T.U
 [];
 //<- meta.sequence - meta.type
 
+    foo != bar
+//  ^^^ variable.other.readwrite
+//      ^^ keyword.operator.comparison
+//         ^^^ variable.other.readwrite
+
+    foo < bar
+//  ^^^ variable.other.readwrite
+//      ^ keyword.operator.comparison
+//        ^^^ variable.other.readwrite
+
     foo < bar > ();
 //  ^^^ variable.function
 //      ^^^^^^^ meta.generic
@@ -1367,12 +1474,6 @@ let x: T.U
 //        ^^^ support.class
 //            ^ punctuation.definition.generic.end
 //              ^^ meta.group
-
-    foo < bar
-//  ^^^ variable.other.readwrite
-//      ^ keyword.operator.comparison
-//        ^^^ variable.other.readwrite
-    ;
 
     new Foo<bar>;
 //  ^^^ keyword.operator.word.new
@@ -1404,7 +1505,7 @@ const f = <T,>(): U => {};
 //        ^^^^^^^^^^^^^^^ meta.function
 //        ^^^ meta.generic
 //        ^ punctuation.definition.generic.begin
-//         ^ variable.parameter.generic
+//         ^ variable.parameter.type
 //          ^ punctuation.separator.comma
 //           ^ punctuation.definition.generic.end
 //            ^^ meta.function.parameters
@@ -1420,8 +1521,71 @@ const f = <T, U = V<any>>() => {};
 //                          ^^ keyword.declaration.function.arrow
 //                             ^^ meta.block
 
-    a != b;
-//    ^^ keyword.operator.comparison
+const f = <const T>() => foo;
+//        ^^^^^^^^^ meta.function meta.generic - meta.function meta.function
+//                 ^^ meta.function.parameters - meta.function meta.function
+//                   ^^^^^^^ meta.function - meta.function meta.function
+//        ^ punctuation.definition.generic.begin
+//         ^^^^^ storage.modifier.const
+//               ^ variable.parameter.type
+//                ^ punctuation.definition.generic.end
+//                 ^ punctuation.section.group.begin
+//                  ^ punctuation.section.group.end
+//                    ^^ keyword.declaration.function.arrow
+//                       ^^^ meta.block variable.other.readwrite
+//                          ^ punctuation.terminator.statement
+
+const f = <const T>(a: T,): T => foo;
+//        ^^^^^^^^^ meta.function meta.generic - meta.function meta.function
+//                 ^^^^^^^ meta.function.parameters - meta.function meta.function
+//                        ^ meta.function - meta.type - meta.function meta.function
+//                         ^^^ meta.function meta.type - meta.function meta.function
+//                            ^^^^^^ meta.function - meta.type - meta.function meta.function
+//        ^ punctuation.definition.generic.begin
+//         ^^^^^ storage.modifier.const
+//               ^ variable.parameter.type
+//                ^ punctuation.definition.generic.end
+//                 ^ punctuation.section.group.begin
+//                  ^ variable.parameter.function
+//                   ^ punctuation.separator.type
+//                    ^^ meta.type
+//                     ^ support.class
+//                      ^ punctuation.separator.parameter.function
+//                       ^ punctuation.section.group.end
+//                        ^ punctuation.separator.type
+//                          ^ support.class
+//                            ^^ keyword.declaration.function.arrow
+//                               ^^^ meta.block variable.other.readwrite
+//                                  ^ punctuation.terminator.statement
+
+const f = <const T extends Foo, X extends Bar>(a: T,): X => foo;
+//        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.js meta.generic.js
+//                                            ^^^^^^^ meta.function.parameters - meta.function meta.function
+//                                                   ^ meta.function - meta.type - meta.function meta.function
+//                                                    ^^^ meta.function meta.type - meta.function meta.function
+//                                                       ^^^^^^ meta.function - meta.type - meta.function meta.function
+//        ^ punctuation.definition.generic.begin
+//         ^^^^^ storage.modifier.const
+//               ^ variable.parameter.type
+//                 ^^^^^^^ storage.modifier.extends
+//                         ^^^ support.class
+//                            ^ punctuation.separator.comma
+//                              ^ variable.parameter.type
+//                                ^^^^^^^ storage.modifier.extends
+//                                        ^^^ support.class
+//                                           ^ punctuation.definition.generic.end
+//                                            ^ punctuation.section.group.begin
+//                                             ^ meta.binding.name variable.parameter.function
+//                                              ^ punctuation.separator.type
+//                                               ^^ meta.type
+//                                                ^ support.class
+//                                                 ^ punctuation.separator.parameter.function
+//                                                  ^ punctuation.section.group.end
+//                                                   ^ punctuation.separator.type
+//                                                     ^ support.class
+//                                                       ^^ keyword.declaration.function.arrow
+//                                                          ^^^ meta.block variable.other.readwrite
+//                                                             ^ punctuation.terminator.statement
 
 const x = {
     readonly: true,
@@ -1465,9 +1629,9 @@ const x = {
 //             ^ punctuation.separator.type
 //              ^^^^^^^^^^^^^^^^^^^^^ meta.type
 //               ^^^^^^^^^^^ meta.generic
-//                ^ variable.parameter.generic
+//                ^ variable.parameter.type
 //                 ^ punctuation.separator.comma
-//                  ^^^ variable.parameter.generic
+//                  ^^^ variable.parameter.type
 //                     ^ keyword.operator.assignment
 //                      ^^^ meta.string string.quoted.double
 //                          ^^ meta.group
@@ -1535,7 +1699,7 @@ type T<in out U> = V;
 //    ^ punctuation.definition.generic.begin
 //     ^^ storage.modifier.variance
 //        ^^^ storage.modifier.variance
-//            ^ variable.parameter.generic
+//            ^ variable.parameter.type
 //             ^ punctuation.definition.generic.end
 
 type T = Foo | ... 100 more ... | Bar;
@@ -1559,3 +1723,141 @@ type T = Foo | ... 100 more ... | Bar;
 //  ^^^^^^^ meta.function-call
 //     ^^ keyword.operator.type
 //       ^^ meta.function-call.arguments
+
+// instantiations
+
+var obj = new.target;
+//        ^^^^^^^^^^ meta.instantiation
+//        ^^^ keyword.operator.word.new
+//           ^ punctuation.accessor.dot
+//            ^^^^^^ variable.language.target
+//                  ^ punctuation.terminator.statement
+
+var obj = new Constructor(param1, param2);
+//        ^^^^ meta.instantiation - meta.function-call
+//            ^^^^^^^^^^^ meta.instantiation meta.function-call.identifier
+//                       ^^^^^^^^^^^^^^^^ meta.instantiation meta.function-call.arguments meta.group
+//            ^^^^^^^^^^^ support.class
+//                       ^ punctuation.section.group.begin
+//                        ^ variable.other.readwrite
+//                                      ^ punctuation.section.group.end
+
+var obj = new function() {}();
+//        ^^^^ meta.instantiation - meta.function-call - meta.function
+//            ^^^^^^^^ meta.instantiation meta.function-call.identifier meta.function
+//                    ^^ meta.instantiation meta.function-call.identifier meta.function.parameters
+//                      ^^^ meta.instantiation meta.function-call.identifier meta.function
+//                         ^^ meta.instantiation meta.function-call.arguments meta.group
+//                           ^ - meta.instantiation - meta.function-call - meta.function
+//            ^^^^^^^^ keyword.declaration.function
+//                    ^ punctuation.section.group.begin
+//                     ^ punctuation.section.group.end
+//                       ^ punctuation.section.block.begin
+//                        ^ punctuation.section.block.end
+//                         ^ punctuation.section.group.begin
+//                          ^ punctuation.section.group.end
+//                           ^ punctuation.terminator.statement
+
+var obj = new (function() {})();
+//        ^^^^ meta.instantiation - meta.function-call - meta.function
+//            ^ meta.instantiation meta.function-call.identifier meta.group
+//             ^^^^^^^^ meta.instantiation meta.function-call.identifier meta.group meta.function
+//                     ^^ meta.instantiation meta.function-call.identifier meta.group meta.function.parameters
+//                       ^ meta.instantiation meta.function-call.identifier meta.group meta.function - meta.block
+//                        ^^ meta.instantiation meta.function-call.identifier meta.group meta.function meta.block
+//                          ^ meta.instantiation meta.function-call.identifier meta.group - meta.function - meta.block
+//                           ^^ meta.instantiation meta.function-call.arguments meta.group
+//                             ^ - meta.instantiation - meta.function-call - meta.function
+//            ^ punctuation.section.group.begin
+//             ^^^^^^^^ keyword.declaration.function
+//                     ^ punctuation.section.group.begin
+//                      ^ punctuation.section.group.end
+//                        ^ punctuation.section.block.begin
+//                         ^ punctuation.section.block.end
+//                          ^ punctuation.section.group.end
+//                           ^ punctuation.section.group.begin
+//                            ^ punctuation.section.group.end
+//                             ^ punctuation.terminator.statement
+
+var obj = new class {}();
+//        ^^^^ meta.instantiation - meta.function-call - meta.class
+//            ^^^^^^^^ meta.instantiation meta.function-call.identifier meta.class
+//                    ^^ meta.instantiation meta.function-call.arguments meta.group - meta.class
+//                      ^ - meta.instantiation - meta.function-call - meta.class
+//            ^^^^^ keyword.declaration.class
+//                  ^ punctuation.section.block.begin
+//                   ^ punctuation.section.block.end
+//                    ^ punctuation.section.group.begin
+//                     ^ punctuation.section.group.end
+//                      ^ punctuation.terminator.statement
+
+var obj = new class Foo{}();
+//        ^^^^ meta.instantiation - meta.class
+//            ^^^^^^^^^^^ meta.instantiation meta.function-call.identifier meta.class
+//                       ^^ meta.instantiation meta.function-call.arguments meta.group
+//                         ^ - meta.instantiation - meta.function-call - meta.class
+//            ^^^^^ keyword.declaration.class
+//                  ^^^ entity.name.class
+//                     ^ punctuation.section.block.begin
+//                      ^ punctuation.section.block.end
+//                       ^ punctuation.section.group.begin
+//                        ^ punctuation.section.group.end
+//                         ^ punctuation.terminator.statement
+
+var obj = new class extends Foo {}();
+//        ^^^^ meta.instantiation - meta.function-call - meta.class
+//            ^^^^^^^^^^^^^^^^^^^^ meta.instantiation meta.function-call.identifier meta.class
+//                                ^^ meta.instantiation meta.function-call.arguments meta.group - meta.class
+//                                  ^ - meta.instantiation - meta.function-call - meta.class
+//            ^^^^^ keyword.declaration.class
+//                  ^^^^^^^ storage.modifier.extends
+//                          ^^^ entity.other.inherited-class
+//                              ^ punctuation.section.block.begin
+//                               ^ punctuation.section.block.end
+//                                ^ punctuation.section.group.begin
+//                                 ^ punctuation.section.group.end
+//                                  ^ punctuation.terminator.statement
+
+var obj = new class Foo extends Bar {}();
+//        ^^^^ meta.instantiation - meta.function-call - meta.class
+//            ^^^^^^^^^^^^^^^^^^^^^^^^ meta.instantiation meta.function-call.identifier meta.class
+//                                    ^^ meta.instantiation meta.function-call.arguments meta.group - meta.class
+//                                      ^ - meta.instantiation - meta.function-call - meta.class
+//            ^^^^^ keyword.declaration.class
+//                  ^^^ entity.name.class
+//                      ^^^^^^^ storage.modifier.extends
+//                              ^^^ entity.other.inherited-class
+//                                  ^ punctuation.section.block.begin
+//                                   ^ punctuation.section.block.end
+//                                    ^ punctuation.section.group.begin
+//                                     ^ punctuation.section.group.end
+//                                      ^ punctuation.terminator.statement
+
+var obj = new class implements Foo {}();
+//        ^^^^ meta.instantiation - meta.function-call - meta.class
+//            ^^^^^^^^^^^^^^^^^^^^^^^ meta.instantiation meta.function-call.identifier meta.class
+//                                   ^^ meta.instantiation meta.function-call.arguments meta.group - meta.class
+//                                     ^ - meta.instantiation - meta.function-call - meta.class
+//            ^^^^^ keyword.declaration.class
+//                  ^^^^^^^^^^ storage.modifier.implements
+//                             ^^^ entity.other.inherited-class
+//                                 ^ punctuation.section.block.begin
+//                                  ^ punctuation.section.block.end
+//                                   ^ punctuation.section.group.begin
+//                                    ^ punctuation.section.group.end
+//                                     ^ punctuation.terminator.statement
+
+var obj = new class Foo implements Bar {}();
+//        ^^^^ meta.instantiation - meta.function-call - meta.class
+//            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.instantiation meta.function-call.identifier meta.class
+//                                       ^^ meta.instantiation meta.function-call.arguments meta.group - meta.class
+//                                         ^ - meta.instantiation - meta.function-call - meta.class
+//            ^^^^^ keyword.declaration.class
+//                  ^^^ entity.name.class
+//                      ^^^^^^^^^^ storage.modifier.implements
+//                                 ^^^ entity.other.inherited-class
+//                                     ^ punctuation.section.block.begin
+//                                      ^ punctuation.section.block.end
+//                                       ^ punctuation.section.group.begin
+//                                        ^ punctuation.section.group.end
+//                                         ^ punctuation.terminator.statement

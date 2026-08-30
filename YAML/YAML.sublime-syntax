@@ -78,9 +78,6 @@ variables:
   ns_anchor_char: '[^\s\[\]/{/},]'
   ns_anchor_name: '{{ns_anchor_char}}+'
 
-  # double-quoted scalar
-  c_ns_esc_char: \\(?:[0abtnvfre "/\\N_Lp]|x[\dA-Fa-f]{2}|u[\dA-Fa-f]{4}|U[\dA-Fa-f]{8})
-
   # plain scalar begin and end patterns
   ns_plain_first_plain_in: |- # c=plain-in
     (?x:
@@ -222,9 +219,9 @@ contexts:
 
   main:
     - match: ^---
-      scope: entity.other.document.begin.yaml
+      scope: punctuation.section.document.begin.yaml
     - match: ^\.{3}
-      scope: entity.other.document.end.yaml
+      scope: punctuation.section.document.end.yaml
     - include: directive
     - include: node
 
@@ -304,6 +301,7 @@ contexts:
         (?: ^ [ \t]* | [ \t]+ )
         (?=\#)
       push: comment-begin
+    - include: merge-conflict-markers
 
   comment-begin:
     - meta_include_prototype: false
@@ -316,6 +314,26 @@ contexts:
     - meta_scope: comment.line.number-sign.yaml
     - match: \n
       pop: 1
+
+###[ MERGE CONFLICT MARKERS ]##################################################
+
+  merge-conflict-markers:
+    # see also: Diff.sublime-syntax#conflict-markers
+    - match: ^(<{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.begin.diff
+      captures:
+        1: punctuation.section.block.begin.diff
+        2: entity.name.section.diff
+    - match: ^(>{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.end.diff
+      captures:
+        1: punctuation.section.block.end.diff
+        2: entity.name.section.diff
+    - match: ^(\|{7}|={7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.separator.diff
+      captures:
+        1: punctuation.section.block.diff
+        2: entity.name.section.diff
 
 ###[ DIRECTIVES ]#############################################################
 
@@ -331,7 +349,7 @@ contexts:
     # http://yaml.org/spec/1.2/spec.html#directive/YAML/
     - match: (YAML)[ \t]+(\d+\.\d+)
       captures:
-        1: keyword.other.directive.yaml.yaml
+        1: keyword.control.directive.yaml.yaml
         2: constant.numeric.yaml-version.yaml
       set: directive-finish
     # %TAG directive
@@ -345,7 +363,7 @@ contexts:
         )?
       # handle and prefix are optional for when typing
       captures:
-        1: keyword.other.directive.tag.yaml
+        1: keyword.control.directive.tag.yaml
         2: storage.type.tag-handle.yaml
         3: support.type.tag-prefix.yaml
       set: directive-finish
@@ -503,13 +521,19 @@ contexts:
     # schemes with background color definitions.
     - meta_include_prototype: false
     - meta_scope: meta.string.yaml string.quoted.double.yaml
-    - match: '{{c_ns_esc_char}}'
-      scope: constant.character.escape.double-quoted.yaml
-    - match: \\\n
-      scope: constant.character.escape.double-quoted.newline.yaml
     - match: \"
       scope: punctuation.definition.string.end.yaml
       pop: 1
+    - match: \\[ 0_abefLnNPprtv/\\"]
+      scope: constant.character.escape.yaml
+    - match: \\x\h{2}
+      scope: constant.character.escape.unicode.8bit.yaml
+    - match: \\u\h{4}
+      scope: constant.character.escape.unicode.16bit.yaml
+    - match: \\U\h{8}
+      scope: constant.character.escape.unicode.32bit.yaml
+    - match: \\.
+      scope: invalid.illegal.escape.yaml
 
   flow-scalar-single-quoted-in:
     # http://yaml.org/spec/1.2/spec.html#style/flow/single-quoted

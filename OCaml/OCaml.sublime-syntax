@@ -273,9 +273,9 @@ contexts:
           pop: true
         - include: main
     - match: '^[ \t]*#[a-zA-Z]+'
-      scope: keyword.other.directive.ocaml
+      scope: keyword.control.directive.ocaml
     - match: '^[ \t]*#[0-9]*'
-      scope: keyword.other.directive.line-number.ocaml
+      scope: keyword.control.directive.line-number.ocaml
     - include: storagetypes
     - match: \b(mutable|ref)\b
       scope: storage.modifier.ocaml
@@ -384,6 +384,25 @@ contexts:
           pop: true
         - match: '\\(x[a-fA-F0-9][a-fA-F0-9]|[0-2]\d\d|[bnrt''"\\])'
           scope: comment.block.string.constant.character.escape.ocaml
+        - include: merge-conflict-markers
+    - include: merge-conflict-markers
+  merge-conflict-markers:
+    # see also: Diff.sublime-syntax#conflict-markers
+    - match: ^(<{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.begin.diff
+      captures:
+        1: punctuation.section.block.begin.diff
+        2: entity.name.section.diff
+    - match: ^(>{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.end.diff
+      captures:
+        1: punctuation.section.block.end.diff
+        2: entity.name.section.diff
+    - match: ^(\|{7}|={7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.separator.diff
+      captures:
+        1: punctuation.section.block.diff
+        2: entity.name.section.diff
   constants:
     - match: '(?:\[\s*(\])|\((\))|\(\s*(\)))'
       scope: constant.language.pseudo-variable.ocaml
@@ -495,17 +514,20 @@ contexts:
     - include: variables
     - include: main
   module-signature:
-    - match: '(val)\s+([a-z_][a-zA-Z0-9_'']*)\s*(:)'
+    - match: '(val)\s+(?:([a-z_][a-zA-Z0-9_'']*)|(\()([^\s)]+)(\)))\s*(:)'
       captures:
         1: keyword.other.ocaml
         2: entity.name.type.value-signature.ocaml
-        3: punctuation.separator.type-constraint.ocaml
+        3: punctuation.section.parens.begin.ocaml
+        4: entity.name.type.value-signature.ocaml
+        5: punctuation.section.parens.end.ocaml
+        6: punctuation.separator.type-constraint.ocaml
       push:
         - meta_scope: meta.module.signature.val.ocaml
         - match: (?=\b(type|val|external|class|module|end)\b)|^\s*$
           pop: true
         - match: '(\?)([a-z][a-zA-Z0-9_]*)\s*(:)'
-          scope: variable.parameter.ameter.optional.ocaml
+          scope: variable.parameter.optional.ocaml
           captures:
             1: punctuation.definition.optional-parameter.ocaml
             2: entity.name.tag.label.optional.ocaml

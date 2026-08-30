@@ -64,11 +64,13 @@ hidden_file_extensions:
 
 first_line_match: |-
   (?xi:
-    ^ \#! .* \bj?ruby\b                      # shebang
+    ^ \#! .* {{shebang_language}}            # shebang
   | ^ \s* \# .*? -\*- .*? \bruby\b .*? -\*-  # editorconfig
   )
 
 variables:
+  shebang_language: \bj?ruby\b
+
   bin_digits: (?:[01]+(?:_[01]+)*)
   dec_digits: (?:\d+(?:_\d+)*)
   hex_digits: (?:\h+(?:_\h+)*)
@@ -87,9 +89,29 @@ variables:
 
 contexts:
   main:
-    - include: expressions
+    - meta_include_prototype: false
+    - match: ''
+      push: [expressions, shebang]
+
+  shebang:
+    - meta_include_prototype: false
+    - match: ^\s*(\#!)
+      captures:
+        1: punctuation.definition.comment.ruby
+      set: shebang-body
+    - match: ^|(?=\S)  # Note: Ensure to highlight shebang if syntax is embedded.
+      pop: 1
+
+  shebang-body:
+    - meta_include_prototype: false
+    - meta_scope: comment.line.shebang.ruby
+    - match: '{{shebang_language}}'
+      scope: constant.language.shebang.ruby
+    - match: $\n?
+      pop: 1
 
   expressions:
+    - include: data-section
     - include: constants
     - include: class
     - include: module
@@ -101,7 +123,6 @@ contexts:
     - include: method
     - include: strings
     - include: comments
-    - include: data-section
     - include: heredocs
     - include: punctuation
     - include: operators
@@ -116,12 +137,32 @@ contexts:
         - match: ^=end
           scope: punctuation.definition.comment.end.ruby
           pop: true
+        - include: merge-conflict-markers
     - match: \#+
       scope: punctuation.definition.comment.ruby
       push:
         - meta_scope: comment.line.number-sign.ruby
         - match: \n
           pop: true
+    - include: merge-conflict-markers
+
+  merge-conflict-markers:
+    # see also: Diff.sublime-syntax#conflict-markers
+    - match: ^(<{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.begin.diff
+      captures:
+        1: punctuation.section.block.begin.diff
+        2: entity.name.section.diff
+    - match: ^(>{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.end.diff
+      captures:
+        1: punctuation.section.block.end.diff
+        2: entity.name.section.diff
+    - match: ^(\|{7}|={7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.separator.diff
+      captures:
+        1: punctuation.section.block.diff
+        2: entity.name.section.diff
 
   class:
     # Defining a class method
@@ -184,7 +225,7 @@ contexts:
       pop: true
 
   name-parts:
-    - match: ({{identifier}})?(?:(::)|(\.))
+    - match: ({{identifier}})?(?:(::)|(&?\.))
       captures:
         1: support.other.namespace.ruby
         2: punctuation.accessor.double-colon.ruby
@@ -215,8 +256,11 @@ contexts:
     - match: '\btrue\b(?![?!])'
       scope: constant.language.boolean.true.ruby
       push: after-constant
-    - match: '\b(__(FILE|LINE|ENCODING)__|self)\b(?![?!])'
+    - match: '\b(__(FILE|LINE|ENCODING)__)\b(?![?!])'
       scope: variable.language.ruby
+      push: after-constant
+    - match: '\bself\b(?![?!])'
+      scope: variable.language.this.ruby
       push: after-constant
     # hexadecimal imaginary numbers: 0xAi, 0xAri
     - match: '\b(0[xX])({{hex_digits}})(r?i(r)?)\b'
@@ -443,7 +487,7 @@ contexts:
       scope: meta.block.parameters.ruby punctuation.definition.parameters.begin.ruby
       set: block-parameters
     - match: (?=\s*[^\s\|])
-      pop: true
+      set: try-regex
 
   block-parameters:
     - meta_content_scope: meta.block.parameters.ruby
@@ -508,7 +552,7 @@ contexts:
     # loop
     - match: \bfor\b(?![?!])
       scope: keyword.control.loop.for.ruby
-      push: after-keyword
+      push: for-variable
     - match: \buntil\b(?![?!])
       scope: keyword.control.loop.until.ruby
       push: after-keyword
@@ -552,6 +596,14 @@ contexts:
       scope: support.function.builtin.ruby
       push: after-keyword
 
+  for-variable:
+    # note: variables are not scoped, currently
+    - match: \bin\b
+      scope: keyword.control.loop.in.ruby
+      set: after-keyword
+    - match: (?=(?:end|do)\b(?![?!]))|$
+      pop: true
+
   operators:
     - match: '>>'
       scope: keyword.operator.other.ruby
@@ -572,7 +624,7 @@ contexts:
     - match: '!+|&&|\|\|'
       scope: keyword.operator.logical.ruby
       push: after-operator
-    - match: '[~&|^]'
+    - match: '(?:[~|^]|&(?!\.))'
       scope: keyword.operator.bitwise.ruby
       push: after-operator
     - match: \?
@@ -626,7 +678,7 @@ contexts:
         - match: ''
           set: after-identifier
     # This consumes attribute access so we don't need a lookbehind for .
-    - match: \.(?={{identifier}}{{method_punctuation}})
+    - match: '&?\.(?={{identifier}}{{method_punctuation}})'
       scope: punctuation.accessor.dot.ruby
       push:
         - include: well-known-methods
@@ -637,7 +689,7 @@ contexts:
     - match: '{{identifier}}{{method_punctuation}}'
     # This consumes module/class accessor so we don't need a lookbehind for ::
       push: after-identifier
-    - match: \.
+    - match: '&?\.'
       scope: punctuation.accessor.dot.ruby
     - match: '::'
       scope: punctuation.accessor.double-colon.ruby
@@ -972,7 +1024,7 @@ contexts:
         - meta_content_scope: meta.function.ruby
         - match: '(self)(\.)({{identifier}}{{method_punctuation}}|===?|>[>=]?|<=>|<[<=]?|[%&`/\|]|\*\*?|=?~|[-+]@?|\[\]=?)'
           captures:
-            1: variable.language.ruby
+            1: variable.language.this.ruby
             2: punctuation.accessor.dot.ruby
             3: entity.name.function.ruby
           set: method-parameters-start
@@ -2151,6 +2203,7 @@ contexts:
     - meta_scope: meta.string.heredoc.ruby
     - meta_content_scope: string.unquoted.heredoc.ruby
     - include: indented-heredoc-end
+    - include: merge-conflict-markers
     - include: interpolated-ruby
     - include: escaped-char
 
@@ -2158,11 +2211,13 @@ contexts:
     - meta_scope: meta.string.heredoc.ruby
     - meta_content_scope: string.unquoted.heredoc.ruby
     - include: indented-heredoc-end
+    - include: merge-conflict-markers
 
   heredoc-plain-unindented-interpolated:
     - meta_scope: meta.string.heredoc.ruby
     - meta_content_scope: string.unquoted.heredoc.ruby
     - include: unindented-heredoc-end
+    - include: merge-conflict-markers
     - include: interpolated-ruby
     - include: escaped-char
 
@@ -2170,6 +2225,7 @@ contexts:
     - meta_scope: meta.string.heredoc.ruby
     - meta_content_scope: string.unquoted.heredoc.ruby
     - include: unindented-heredoc-end
+    - include: merge-conflict-markers
 
   heredoc-shell:
     - match: (<<[-~])(["`]?)({{heredoc_type_shell}})(["`]?)
@@ -2351,11 +2407,21 @@ contexts:
 ###[ DATA SECTION ]############################################################
 
   data-section:
-    - match: ^__END__\n
-      scope: meta.string.ruby string.unquoted.program-block.ruby
-      push:
-        - meta_content_scope: text.plain
-        - match: (?=<?xml|<(?i:html\b)|!DOCTYPE (?i:html\b))
-          push:
-            - meta_scope: text.html.embedded.ruby
-            - include: scope:text.html.basic
+    - match: ^__END__$
+      scope: keyword.control.flow.end.ruby
+      set: data-section-body
+
+  data-section-body:
+    - clear_scopes: true
+    - meta_include_prototype: false
+    - meta_content_scope: text.plain
+    - match: (?=<?xml|<(?i:html\b)|!DOCTYPE (?i:html\b))
+      set: data-section-html-body
+    - include: merge-conflict-markers
+
+  data-section-html-body:
+    - clear_scopes: true
+    - meta_include_prototype: false
+    - meta_scope: text.html.embedded.ruby
+    - include: scope:text.html.basic
+      apply_prototype: true

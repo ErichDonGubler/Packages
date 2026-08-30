@@ -6,68 +6,101 @@
 
 ###[ POD TESTS ] #############################################################
 
-=pod
-# <- meta.comment.perl comment.block.documentation.perl entity.name.tag.pod.perl
-#^^^ meta.comment.perl comment.block.documentation.perl entity.name.tag.pod.perl
-=encoding utf8
-# <- meta.comment.perl comment.block.documentation.perl entity.name.tag.pod.perl
-#^^^^^^^^^^^^^ meta.comment.perl comment.block.documentation.perl
-#^^^^^^^^ entity.name.tag.pod.perl
-#         ^^^^ markup.heading.perl
-=head1 B<--param>
-# <- meta.comment.perl comment.block.documentation.perl entity.name.tag.pod.perl
-#^^^^^^^^^^^^^^^^ meta.comment.perl comment.block.documentation.perl
+=head1 Section 1
+# <- comment.block.documentation.perl meta.heading.perl entity.name.tag.pod.perl
+#^^^^^^^^^^^^^^^^ comment.block.documentation.perl meta.heading.perl
 #^^^^^ entity.name.tag.pod.perl
-#      ^^^^^^^^^^ markup.heading.perl
+#     ^ - entity
+#      ^^^^^^^^^ entity.name.section.perl
+Paragraph
+# <- comment.block.documentation.perl
+#^^^^^^^^^ comment.block.documentation.perl
+=head2 Section 1.1
+# <- comment.block.documentation.perl meta.heading.perl entity.name.tag.pod.perl
+#^^^^^^^^^^^^^^^^^^ comment.block.documentation.perl meta.heading.perl
+#^^^^^ entity.name.tag.pod.perl
+#     ^ - entity
+#      ^^^^^^^^^^^ entity.name.section.perl
+Paragraph
+# <- comment.block.documentation.perl
+#^^^^^^^^^ comment.block.documentation.perl
+=item Using C<$|> to Control Buffering
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.perl
+#^^^^ entity.name.tag.pod.perl
+#    ^ - entity - string
+#     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.perl string.unquoted.perl
+#           ^ entity.name.tag.code.perl
+#            ^ punctuation.definition.tag.begin.perl
+#             ^^ markup.quote.perl
+#               ^ punctuation.definition.tag.end.perl
+=cut
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^ comment.block.documentation.perl entity.name.tag.pod.perl
+
+=pod
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^ comment.block.documentation.perl entity.name.tag.pod.perl
+=encoding utf8
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^^^^^^^^^^^ comment.block.documentation.perl
+#^^^^^^^^ entity.name.tag.pod.perl
+#        ^ - entity - string
+#         ^^^^ meta.string.perl string.unquoted.perl
+=head1 B<--param>
+# <- comment.block.documentation.perl meta.heading.perl entity.name.tag.pod.perl
+#^^^^^^^^^^^^^^^^^ comment.block.documentation.perl meta.heading.perl
+#^^^^^ entity.name.tag.pod.perl
+#     ^ - entity - string
+#      ^^^^^^^^^^ entity.name.section.perl
 #      ^ entity.name.tag.bold.perl
 #       ^ punctuation.definition.tag.begin.perl
 #        ^^^^^^^ markup.bold.perl
 #               ^ punctuation.definition.tag.end.perl
    B<bold>
-#  ^^^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.bold.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^^^ markup.bold.perl
 #        ^ punctuation.definition.tag.end.perl
    C<code>
-#  ^^^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.code.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^^^ markup.quote.perl
 #        ^ punctuation.definition.tag.end.perl
    E<lt>
-#  ^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.escaped.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^ constant.character.escape.perl
 #      ^ punctuation.definition.tag.end.perl
    F<file.ext>
-#  ^^^^^^^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^^^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.filename.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^^^^^^^ meta.string.perl string.unquoted.perl
 #            ^ punctuation.definition.tag.end.perl
    I<italic>
-#  ^^^^^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.italic.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^^^^^ markup.italic.perl
 #          ^ punctuation.definition.tag.end.perl
 
    L<http://www.perl.org/>
-#  ^^^^^^^^^^^^^^^^^^^^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.link.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^^^^^^^^^^^^^^^^^^^ markup.underline.link.perl
 #                        ^ punctuation.definition.tag.end.perl
    L<The Perl Home Page|http://www.perl.org/>
-#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.link.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ markup.underline.link.perl
 #                                           ^ punctuation.definition.tag.end.perl
   S<[ B<-A> ]>
-# ^ entity.name.tag.none-braeking.perl
+# ^ entity.name.tag.non-breaking.perl
 #  ^ punctuation.definition.tag.begin.perl
 #     ^ entity.name.tag.bold.perl
 #      ^ punctuation.definition.tag.begin.perl
@@ -75,7 +108,7 @@
 #         ^ punctuation.definition.tag.end.perl
 #            ^ punctuation.definition.tag.end.perl
    X<index entry>
-#  ^^^^^^^^^^^^^^ meta.comment.perl comment.block.documentation.perl
+#  ^^^^^^^^^^^^^^ comment.block.documentation.perl
 #  ^ entity.name.tag.index.perl
 #   ^ punctuation.definition.tag.begin.perl
 #    ^^^^^^^^^^^ entity.name.label.perl
@@ -85,64 +118,291 @@
 #                                         ^ entity.name.tag.escaped.perl
 
 =begin css
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^^^^^^^^ meta.comment.perl meta.interpolation.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^^^^^^^^ comment.block.documentation.perl
 #^^^^^ entity.name.tag.pod.perl
 #     ^ - constant - entity
-#      ^^^ constant.other.language-name.css.perl
+#      ^^^ constant.other.language-name.perl
   a {  };
-# ^^^^^^^ meta.comment.perl meta.interpolation.perl source.css.embedded.perl source.css
+# ^^^^^^^^ comment.block.documentation.perl source.css.embedded.perl
 =end
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^ meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^ comment.block.documentation.perl entity.name.tag.pod.perl
 
 =begin html
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^^^^^^^^ meta.comment.perl meta.interpolation.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^^^^^^^^^ comment.block.documentation.perl
 #^^^^^ entity.name.tag.pod.perl
 #     ^ - constant - entity
-#      ^^^^ constant.other.language-name.html.perl
+#      ^^^^ constant.other.language-name.perl
     <html>
-# <- meta.comment.perl meta.interpolation.perl text.html.embedded.perl
-#^^^^^^^^^ meta.comment.perl meta.interpolation.perl text.html.embedded.perl
+# <- comment.block.documentation.perl text.html.embedded.perl
+#^^^^^^^^^^ comment.block.documentation.perl text.html.embedded.perl
     </html>
-# <- meta.comment.perl meta.interpolation.perl text.html.embedded.perl
-#^^^^^^^^^ meta.comment.perl meta.interpolation.perl text.html.embedded.perl
+# <- comment.block.documentation.perl text.html.embedded.perl
+#^^^^^^^^^^ comment.block.documentation.perl text.html.embedded.perl
 =end
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^ meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^ comment.block.documentation.perl entity.name.tag.pod.perl
 
 =begin json
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^^^^^^^^ meta.comment.perl meta.interpolation.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^^^^^^^^^ comment.block.documentation.perl
 #^^^^^ entity.name.tag.pod.perl
 #     ^ - constant - entity
-#      ^^^^ constant.other.language-name.json.perl
+#      ^^^^ constant.other.language-name.perl
   {
-# ^ meta.comment.perl meta.interpolation.perl source.json.embedded.perl source.json
+# ^ comment.block.documentation.perl source.json.embedded.perl meta.mapping.json punctuation.section.mapping.begin.json
     "key": "value",
-#   ^^^^^^^^^^^^^^^ meta.comment.perl meta.interpolation.perl source.json.embedded.perl source.json
+#   ^^^^^^^^^^^^^^^^ comment.block.documentation.perl source.json.embedded.perl
   }
-# ^ meta.comment.perl meta.interpolation.perl source.json.embedded.perl source.json
+# ^ comment.block.documentation.perl source.json.embedded.perl meta.mapping.json punctuation.section.mapping.end.json
 =end
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^ meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^ comment.block.documentation.perl entity.name.tag.pod.perl
 
 =begin sql
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^^^^^^^^ meta.comment.perl meta.interpolation.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^^^^^^^^ comment.block.documentation.perl
 #^^^^^ entity.name.tag.pod.perl
 #     ^ - constant - entity
-#      ^^^ constant.other.language-name.sql.perl
+#      ^^^ constant.other.language-name.perl
   SELECT * FROM `table`
-# ^^^^^^^^^^^^^^^^^^^^^ meta.comment.perl meta.interpolation.perl source.sql.embedded.perl source.sql
+#^^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.perl source.sql.embedded.perl
 =end
-# <- meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
-#^^^ meta.comment.perl meta.interpolation.perl entity.name.tag.pod.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^ comment.block.documentation.perl entity.name.tag.pod.perl
+
+# stray =cut tag
 
 =cut
-# <- meta.comment.perl comment.block.documentation.perl entity.name.tag.pod.perl
-#^^^ meta.comment.perl comment.block.documentation.perl entity.name.tag.pod.perl
+# <- comment.block.documentation.perl entity.name.tag.pod.perl
+#^^^ comment.block.documentation.perl entity.name.tag.pod.perl
+
+###[ MERGE CONFLICT MARKERS ]#################################################
+
+=begin html
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+=end
+
+=pod
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+=end
+
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+
+{ # conflicts in blocks
+
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+
+}
+
+( # conflicts in blocks
+
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation
+
+)
+
+# conflicts in HEREDOC strings
+
+$plain_heredoc = <<MERGE
+  before
+#^^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl
+<<<<<<< HEAD
+# <- meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#^^^^^^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.begin.diff
+#^^^^^^ punctuation.section.block.begin.diff
+#       ^^^^ entity.name.section.diff
+  ours
+#^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl
+=======
+# <- meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+  base
+#^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl
+|||||||
+# <- meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+  theires
+#^^^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl
+>>>>>>> master
+# <- meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.end.diff punctuation.section.block.end.diff
+#^^^^^^^^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl meta.block.conflict.end.diff
+#^^^^^^ punctuation.section.block.end.diff
+#       ^^^^^^ entity.name.section.diff
+  after
+#^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl
+MERGE
+# <- meta.string.heredoc.perl meta.tag.heredoc.perl entity.name.tag.heredoc.plain.perl
+#^^^^ meta.string.heredoc.perl meta.tag.heredoc.perl entity.name.tag.heredoc.plain.perl
+
+$css_heredoc = <<CSS
+<<<<<<< HEAD
+# <- meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#^^^^^^^^^^^ meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.begin.diff
+#^^^^^^ punctuation.section.block.begin.diff
+#       ^^^^ entity.name.section.diff
+=======
+# <- meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.separator.diff punctuation.section.block.diff
+|||||||
+# <- meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.separator.diff punctuation.section.block.diff
+>>>>>>> master
+# <- meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.end.diff punctuation.section.block.end.diff
+#^^^^^^^^^^^^^ meta.string.heredoc.perl source.css.embedded.perl source.css meta.block.conflict.end.diff
+#^^^^^^ punctuation.section.block.end.diff
+#       ^^^^^^ entity.name.section.diff
+CSS
+# <- meta.string.heredoc.perl meta.tag.heredoc.perl entity.name.tag.heredoc.css.perl
+#^^ meta.string.heredoc.perl meta.tag.heredoc.perl entity.name.tag.heredoc.css.perl
+
+# multiline strings
+
+$double_quoted_string = "
+  before
+#^^^^^^^ meta.string.perl string.quoted.double.perl
+<<<<<<< HEAD
+# <- meta.string.perl string.quoted.double.perl meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#^^^^^^^^^^^ meta.string.perl string.quoted.double.perl meta.block.conflict.begin.diff
+#^^^^^^ punctuation.section.block.begin.diff
+#       ^^^^ entity.name.section.diff
+  ours
+#^^^^^ meta.string.perl string.quoted.double.perl
+=======
+# <- meta.string.perl string.quoted.double.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.perl string.quoted.double.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+  base
+#^^^^^ meta.string.perl string.quoted.double.perl
+|||||||
+# <- meta.string.perl string.quoted.double.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.perl string.quoted.double.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+  theires
+#^^^^^^^^ meta.string.perl string.quoted.double.perl
+>>>>>>> master
+# <- meta.string.perl string.quoted.double.perl meta.block.conflict.end.diff punctuation.section.block.end.diff
+#^^^^^^^^^^^^^ meta.string.perl string.quoted.double.perl meta.block.conflict.end.diff
+#^^^^^^ punctuation.section.block.end.diff
+#       ^^^^^^ entity.name.section.diff
+  after
+#^^^^^^ meta.string.perl string.quoted.double.perl
+"
+
+$pattern = /
+  (?x)
+  before
+#^^^^^^^ meta.string.perl string.regexp.perl
+<<<<<<< HEAD
+# <- meta.string.perl string.regexp.perl meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#^^^^^^^^^^^ meta.string.perl string.regexp.perl meta.block.conflict.begin.diff
+#^^^^^^ punctuation.section.block.begin.diff
+#       ^^^^ entity.name.section.diff
+  [Oo]ours
+#^^^^^^^^^ meta.string.perl string.regexp.perl
+=======
+# <- meta.string.perl string.regexp.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.perl string.regexp.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+  base?
+#^^^^^^ meta.string.perl string.regexp.perl
+|||||||
+# <- meta.string.perl string.regexp.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+#^^^^^^ meta.string.perl string.regexp.perl meta.block.conflict.separator.diff punctuation.section.block.diff
+  theires
+#^^^^^^^^ meta.string.perl string.regexp.perl
+>>>>>>> master
+# <- meta.string.perl string.regexp.perl meta.block.conflict.end.diff punctuation.section.block.end.diff
+#^^^^^^^^^^^^^ meta.string.perl string.regexp.perl meta.block.conflict.end.diff
+#^^^^^^ punctuation.section.block.end.diff
+#       ^^^^^^ entity.name.section.diff
+  after
+#^^^^^^ meta.string.perl string.regexp.perl
+/
+
 
 ###[ FORMAT ]#################################################################
 
@@ -545,7 +805,7 @@ format var =
 
 ###[ SPRINTF FORMAT ]#########################################################
 
-  "%<index>?<flag>?<width>?[<vector>|<precicion>]<size>?<sequence>
+  "%<index>?<flag>?<width>?[<vector>|<precision>]<size>?<sequence>
 
   # sequences
 
@@ -723,7 +983,7 @@ format var =
 #  ^^^^^ constant.other.placeholder.perl
 #       ^ - constant.other.placeholder
 
-  # precicion
+  # precision
 
   %#.5o
 #^ - constant.other.placeholder
@@ -869,7 +1129,7 @@ HTML
 # <- meta.string.heredoc.perl text.html.embedded.perl
 #^^^^^^^^^ meta.string.heredoc.perl text.html.embedded.perl
    HTML
-#  ^^^^ meta.string.heredoc.perl text.html.embedded.perl - constant.other.language-name.html.perl
+#  ^^^^ meta.string.heredoc.perl text.html.embedded.perl - constant - entity
 HTML
 # <- meta.string.heredoc.perl entity.name.tag.heredoc.html.perl
 #^^^ meta.string.heredoc.perl entity.name.tag.heredoc.html.perl
@@ -1073,6 +1333,32 @@ EOT-EOT-EOT
   (1 << $var) ;
 #    ^^^^^^^^^^ - meta.string.heredoc.perl
 #    ^^ - keyword.operator.heredoc.perl
+
+###[ INDENTED HEREDOC ]#######################################################
+
+$var = <<~EOF # comment
+# no comment
+# <- meta.string.heredoc.perl string.unquoted.heredoc.perl - comment
+#^^^^^^^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl - comment
+  EOF
+#^^^^ meta.string.heredoc.perl meta.tag.heredoc.perl
+# ^^^ entity.name.tag.heredoc.plain.perl
+
+$var = <<~'EOF' # comment
+# no comment
+# <- meta.string.heredoc.perl string.unquoted.heredoc.perl - comment
+#^^^^^^^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl - comment
+  EOF
+#^^^^ meta.string.heredoc.perl meta.tag.heredoc.perl
+# ^^^ entity.name.tag.heredoc.plain.perl
+
+$var = <<~"EOF" # comment
+# no comment
+# <- meta.string.heredoc.perl string.unquoted.heredoc.perl - comment
+#^^^^^^^^^^^^ meta.string.heredoc.perl string.unquoted.heredoc.perl - comment
+  EOF
+#^^^^ meta.string.heredoc.perl meta.tag.heredoc.perl
+# ^^^ entity.name.tag.heredoc.plain.perl
 
 ###[ OPERATORS ]##############################################################
   ,
@@ -1412,8 +1698,6 @@ EOT-EOT-EOT
 # ^^^^^^^^ constant.language.perl
   __LINE__
 # ^^^^^^^^ constant.language.perl
-  __END__
-# ^^^^^^^ constant.language.perl
 
   # note: language constants keep their scope
   ARGV
@@ -1703,7 +1987,7 @@ EOT-EOT-EOT
 # ^^^^^^^^^^^^^^ meta.function-call.perl
 # ^^ support.function.perl
 #   ^ punctuation.section.generic.begin.perl
-#    ^^^^ meta.string.perl string.unquoted.perl - bariable
+#    ^^^^ meta.string.perl string.unquoted.perl - variable
 #        ^^^^ meta.string.perl meta.interpolation.perl variable.other.readwrite.perl - string
 #            ^^ meta.string.perl string.unquoted.perl - variable
 #              ^ punctuation.section.generic.end.perl
@@ -2612,6 +2896,99 @@ EOT-EOT-EOT
   $[  # index of the first element in an array
 # ^^ variable.language.deprecated.perl
 # ^ punctuation.definition.variable.perl
+
+# Postfix Dereference Syntax
+# https://perldoc.perl.org/perlref#Postfix-Dereference-Syntax
+
+$sref->$*;  # same as  ${ $sref }
+#      ^ keyword.operator.dereference.perl
+#       ^ variable.language.perl
+
+$aref->@*;  # same as  @{ $aref }
+#      ^ keyword.operator.dereference.perl
+#       ^ variable.language.perl
+
+$aref->$#*; # same as $#{ $aref }
+#      ^^ keyword.operator.dereference.perl
+#        ^ variable.language.perl
+
+$href->%*;  # same as  %{ $href }
+#      ^ keyword.operator.dereference.perl
+#       ^ variable.language.perl
+
+$cref->&*;  # same as  &{ $cref }
+#      ^ keyword.operator.dereference.perl
+#       ^ variable.language.perl
+
+$gref->**;  # same as  *{ $gref }
+#      ^ keyword.operator.dereference.perl
+#       ^ variable.language.perl
+
+$gref->*{SCALAR}; # same as *{ $gref }{SCALAR}
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#        ^^^^^^ constant.other.key.perl
+#              ^ punctuation.section.item-access.end.perl
+
+# Postfix Reference Slicing
+# https://perldoc.perl.org/perlref#Postfix-Reference-Slicing
+
+$aref->$[ 0 ];  # same as $$aref[ 0 ]
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^ constant.numeric.value.perl
+#           ^ punctuation.section.item-access.end.perl
+
+$href->${ key };  # same as $$href{ key }
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^^^ constant.other.key.perl
+#             ^ punctuation.section.item-access.end.perl
+
+$aref->@[ 0 ];  # same as @$aref[ 0 ]
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^ constant.numeric.value.perl
+#           ^ punctuation.section.item-access.end.perl
+
+$href->@{ key };  # same as @$href{ key }
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^^^ constant.other.key.perl
+#             ^ punctuation.section.item-access.end.perl
+
+$aref->%[ 0 ];  # same as %$aref[ 0 ]
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^ constant.numeric.value.perl
+#           ^ punctuation.section.item-access.end.perl
+
+$href->%{ key };  # same as %$href{ key }
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^^^ constant.other.key.perl
+#             ^ punctuation.section.item-access.end.perl
+
+$aref->&[ 0 ];  # same as &$aref[ 0 ]
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^ constant.numeric.value.perl
+#           ^ punctuation.section.item-access.end.perl
+
+$href->&{ key };  # same as &$href{ key }
+#      ^ keyword.operator.dereference.perl
+#       ^^^^^^^ meta.item-access.perl
+#       ^ punctuation.section.item-access.begin.perl
+#         ^^^ constant.other.key.perl
+#             ^ punctuation.section.item-access.end.perl
 
 ###[ UNQUALIFIED VARIABLES ]##################################################
 
@@ -4842,7 +5219,7 @@ state
 # ^^^^ variable.function.perl
 #      ^^^^^^^^ meta.string.perl string.quoted.double.perl
 
-  # Patterns an ambigious argument and need parentheses
+  # Patterns an ambiguous argument and need parentheses
   func /pattern/g;
 # ^^^^ variable.function.perl
 #      ^ - punctuation.section.generic.begin
@@ -4966,7 +5343,7 @@ _EOD_
 #           ^ punctuation.section.group.end.perl
 #            ^ punctuation.terminator.statement.perl
 
-  ## The function call argument list can contain arbitary arguments
+  ## The function call argument list can contain arbitrary arguments
   ## after the content of the `_EOD_` HEREDOC.
 
   Func(<<_EOD_;
@@ -5487,3 +5864,36 @@ _EOT_
 #                                                            ^^^^ keyword.control.flow.redo.perl
 #                                                                 ^^^^ variable.label.perl
 #                                                                      ^^ keyword.control.conditional.if.perl
+
+__END__
+# <- keyword.control.flow.end.perl
+# ^^^^^ keyword.control.flow.end.perl
+
+# no more syntax highlighting after __END__
+# <- text.plain - source - comment
+
+__END__
+# <- text.plain - source - entity
+#^^^^^^ text.plain - source - entity
+
+  if else
+# ^^^^^^^ text.plain - keyword
+
+<<<<<<< HEAD
+#  <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+# ^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+#      ^ meta.block.conflict.begin.diff - entity - punctuation
+#       ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+#           ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+#  <- meta.block.conflict.separator.diff punctuation.section.block.diff
+# ^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+#      ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+#  <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+# ^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+#      ^ meta.block.conflict.end.diff - entity - punctuation
+#       ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+#             ^ meta.block.conflict.end.diff - entity - punctuation

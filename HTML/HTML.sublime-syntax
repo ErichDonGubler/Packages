@@ -125,8 +125,9 @@ variables:
   # or whose essence is "application/json" or "text/json".
   # https://mimesniff.spec.whatwg.org/#understanding-mime-types
   # https://mimesniff.spec.whatwg.org/#json-mime-type
+  # https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap
   json_mime_type: |-
-     (?xi: (?: application/ | text/ | [[:ascii:]]+\+ ) json {{mime_type_parameters}}? )
+     (?xi: (?: (?: application/ | text/ | [[:ascii:]]+\+ ) json | importmap ) {{mime_type_parameters}}? )
 
   # A MIME type’s parameters is an ordered map whose keys are ASCII strings and values are strings
   # limited to HTTP quoted-string token code points. It is initially empty.
@@ -142,8 +143,9 @@ variables:
   # - https://github.com/sublimehq/sublime_text/issues/4701
   script_content_begin: |-
     (?x:
-    # whitespace followed by opening html comment begin punctuation
-      \s*(<!--)
+    # whitespace followed by opening html comment begin punctuation,
+    # optionally followed by whitespace until end of line
+      \s*(<!--) (?:\s*\n)?
     # or any other non-whitespace character ahead
     | (?=\s*(?!<!--)\S)
     # or beginning of a line
@@ -151,18 +153,22 @@ variables:
     )
   script_content_end: |-
     (?x:
-    # optional html comment end punctuation followed by </script> tag
-      (?: (\s*) (-->) \s* )? (?=</(?i:script){{tag_name_break_char}})
+    # optional html comment end punctuation or any whitespace at beginning of
+    # line followed by </script> tag
+      (?: (?: ^ \s* | (\s*) ) (-->) \s* | ^ \s* )? (?=</(?i:script){{tag_name_break_char}})
     # or standalone html comment end punctuation in a line
-    |   ^ (\s*) (-->) \s* $
+    # note: Keep empty capture group for compatibility with existing 3rd-party syntaxes!
+    | ^ \s* () (-->) \s* $
     )
   style_content_begin: '{{script_content_begin}}'
   style_content_end: |-
     (?x:
-    # optional html comment end punctuation followed by </style> tag
-      (?: (\s*) (-->) \s* )? (?=</(?i:style){{tag_name_break_char}})
+    # optional html comment end punctuation or any whitespace at beginning of
+    # line followed by </style> tag
+      (?: (?: ^ \s* | (\s*) ) (-->) \s* | ^ \s* )? (?=</(?i:style){{tag_name_break_char}})
     # or standalone html comment end punctuation in a line
-    |   ^ (\s*) (-->) \s* $
+    # note: Keep empty capture group for compatibility with existing 3rd-party syntaxes!
+    | ^ \s* () (-->) \s* $
     )
 
   event_attribute_names: |-
@@ -183,6 +189,10 @@ variables:
 ###############################################################################
 
 contexts:
+
+  preprocessor-content:
+    - meta_prepend: true
+    - include: tag-href-attribute
 
   tag:
     - include: tag-html
@@ -228,36 +238,42 @@ contexts:
   structure-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.structure.any.html
+    - include: merge-conflict-markers
     - include: tag-end
     - include: tag-attributes
 
   block-any-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.block.any.html
+    - include: merge-conflict-markers
     - include: tag-end-maybe-self-closing
     - include: tag-attributes
 
   block-forms-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.block.form.html
+    - include: merge-conflict-markers
     - include: tag-end
     - include: tag-attributes
 
   inline-any-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.inline.any.html
+    - include: merge-conflict-markers
     - include: tag-end-maybe-self-closing
     - include: tag-attributes
 
   inline-forms-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.inline.form.html
+    - include: merge-conflict-markers
     - include: tag-end-maybe-self-closing
     - include: tag-attributes
 
   table-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.inline.table.html
+    - include: merge-conflict-markers
     - include: tag-end-maybe-self-closing
     - include: tag-attributes
 
@@ -278,6 +294,7 @@ contexts:
   tag-other-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.other.html
+    - include: merge-conflict-markers
     - include: tag-end-maybe-self-closing
     - include: tag-attributes
 
@@ -305,11 +322,13 @@ contexts:
   script-close-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.script.end.html
+    - include: merge-conflict-markers
     - include: tag-end
 
   script-javascript:
     - meta_include_prototype: false
     - meta_scope: meta.tag.script.begin.html
+    - include: merge-conflict-markers
     - match: '>'
       scope: punctuation.definition.tag.end.html
       set: script-javascript-content
@@ -345,6 +364,7 @@ contexts:
   script-json:
     - meta_include_prototype: false
     - meta_scope: meta.tag.script.begin.html
+    - include: merge-conflict-markers
     - match: '>'
       scope: punctuation.definition.tag.end.html
       set: script-json-content
@@ -380,11 +400,13 @@ contexts:
   script-html:
     - meta_include_prototype: false
     - meta_scope: meta.tag.script.begin.html
+    - include: merge-conflict-markers
     - include: tag-end
     - include: script-common
 
   script-other:
     - meta_scope: meta.tag.script.begin.html
+    - include: merge-conflict-markers
     - match: '>'
       scope: punctuation.definition.tag.end.html
       set: script-close-tag
@@ -397,12 +419,12 @@ contexts:
 
   script-type-attribute:
     - match: (?i:type){{attribute_name_break}}
-      scope: meta.attribute-with-value.html entity.other.attribute-name.html
+      scope: meta.attribute-with-value.type.html entity.other.attribute-name.html
       set: script-type-attribute-assignment
 
   script-type-attribute-assignment:
     - meta_include_prototype: false
-    - meta_content_scope: meta.tag.script.begin.html meta.attribute-with-value.html
+    - meta_content_scope: meta.tag.script.begin.html meta.attribute-with-value.type.html
     - match: =
       scope: punctuation.separator.key-value.html
       set: script-type-attribute-value
@@ -411,40 +433,45 @@ contexts:
 
   script-type-attribute-value:
     - meta_include_prototype: false
-    - meta_scope: meta.tag.script.begin.html meta.attribute-with-value.html
+    - meta_scope: meta.tag.script.begin.html meta.attribute-with-value.type.html
     - include: script-type-decider
 
   script-type-decider:
     - match: (?={{javascript_mime_type}}{{unquoted_attribute_break}}|'{{javascript_mime_type}}'|"{{javascript_mime_type}}")
       set:
         - script-javascript
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
     - match: (?=(?i:module{{unquoted_attribute_break}}|'module'|"module"))
       set:
         - script-javascript
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
     - match: (?=>|''|"")
       set:
         - script-javascript
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
     - match: (?={{json_mime_type}}{{unquoted_attribute_break}}|'{{json_mime_type}}'|"{{json_mime_type}}")
       set:
         - script-json
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
     - match: (?=(?i:{{html_mime_type}}{{unquoted_attribute_break}}|'{{html_mime_type}}'|"{{html_mime_type}}"))
       set:
         - script-html
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
     - match: (?=\S)
       set:
         - script-other
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
+
+  tag-type-attribute-meta:
+    - meta_include_prototype: false
+    - meta_scope: meta.attribute-with-value.type.html
+    - include: immediately-pop
 
 ###[ STYLE TAG ]##############################################################
 
@@ -470,11 +497,13 @@ contexts:
   style-close-tag-content:
     - meta_include_prototype: false
     - meta_scope: meta.tag.style.end.html
+    - include: merge-conflict-markers
     - include: tag-end
 
   style-css:
     - meta_include_prototype: false
     - meta_scope: meta.tag.style.begin.html
+    - include: merge-conflict-markers
     - match: '>'
       scope: punctuation.definition.tag.end.html
       set: style-css-content
@@ -510,6 +539,7 @@ contexts:
   style-other:
     - meta_include_prototype: false
     - meta_scope: meta.tag.style.begin.html
+    - include: merge-conflict-markers
     - match: '>'
       scope: punctuation.definition.tag.end.html
       set: style-close-tag
@@ -522,12 +552,12 @@ contexts:
 
   style-type-attribute:
     - match: (?i:type){{attribute_name_break}}
-      scope: meta.attribute-with-value.html entity.other.attribute-name.html
+      scope: meta.attribute-with-value.type.html entity.other.attribute-name.html
       set: style-type-attribute-assignment
 
   style-type-attribute-assignment:
     - meta_include_prototype: false
-    - meta_content_scope: meta.tag.style.begin.html meta.attribute-with-value.html
+    - meta_content_scope: meta.tag.style.begin.html meta.attribute-with-value.type.html
     - match: =
       scope: punctuation.separator.key-value.html
       set: style-type-attribute-value
@@ -536,24 +566,24 @@ contexts:
 
   style-type-attribute-value:
     - meta_include_prototype: false
-    - meta_scope: meta.tag.style.begin.html meta.attribute-with-value.html
+    - meta_scope: meta.tag.style.begin.html meta.attribute-with-value.type.html
     - include: style-type-decider
 
   style-type-decider:
     - match: (?=(?i:text/css{{unquoted_attribute_break}}|'text/css'|"text/css"))
       set:
         - style-css
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
     - match: (?=>|''|"")
       set:
         - style-css
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
     - match: (?=\S)
       set:
         - style-other
-        - tag-generic-attribute-meta
+        - tag-type-attribute-meta
         - tag-generic-attribute-value
 
 ###[ ATTRIBUTES ]#############################################################
@@ -678,14 +708,14 @@ contexts:
     - match: \"
       scope: meta.string.html string.quoted.double.html punctuation.definition.string.begin.html
       embed: scope:source.js
-      embed_scope: meta.string.html meta.interpolation.html source.js.embedded.html
+      embed_scope: meta.string.html source.js.embedded.html
       escape: \"
       escape_captures:
         0: meta.string.html string.quoted.double.html punctuation.definition.string.end.html
     - match: \'
       scope: meta.string.html string.quoted.single.html punctuation.definition.string.begin.html
       embed: scope:source.js
-      embed_scope: meta.string.html meta.interpolation.html source.js.embedded.html
+      embed_scope: meta.string.html source.js.embedded.html
       escape: \'
       escape_captures:
         0: meta.string.html string.quoted.single.html punctuation.definition.string.end.html
@@ -854,14 +884,14 @@ contexts:
     - match: \"
       scope: meta.string.html string.quoted.double.html punctuation.definition.string.begin.html
       embed: scope:source.css#rule-list-body
-      embed_scope: meta.string.html meta.interpolation.html source.css.embedded.html
+      embed_scope: meta.string.html source.css.embedded.html
       escape: \"
       escape_captures:
         0: meta.string.html string.quoted.double.html punctuation.definition.string.end.html
     - match: \'
       scope: meta.string.html string.quoted.single.html punctuation.definition.string.begin.html
       embed: scope:source.css#rule-list-body
-      embed_scope: meta.string.html meta.interpolation.html source.css.embedded.html
+      embed_scope: meta.string.html source.css.embedded.html
       escape: \'
       escape_captures:
         0: meta.string.html string.quoted.single.html punctuation.definition.string.end.html

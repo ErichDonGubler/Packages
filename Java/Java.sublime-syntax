@@ -12,13 +12,15 @@ file_extensions:
 
 first_line_match: |-
   (?x:
-    ^ \#! .* \b(bsh|java)\b                  # shebang
+    ^ \#! .* {{shebang_language}}            # shebang
   | ^ \s* // .*? -\*- .*? \bjava\b .*? -\*-  # editorconfig
   )
 
 ###############################################################################
 
 variables:
+  shebang_language: \b(?:bsh|java)\b
+
   # Reserved keywords
   # https://docs.oracle.com/javase/specs/jls/se13/html/jls-3.html#jls-3.9
   reserved_words: |-
@@ -37,39 +39,37 @@ variables:
     | {{illegal_keywords}}
     )
   declaration_keywords: |-
-    (?x: class | enum | @?interface | record | var | void | extends | implements | import | package )
+    (?x: class | enum | @?interface | var | void | extends | implements | import | package )
   control_keywords: |-
-    (?x: assert | break | case | catch | continue | do | else | finally | for
-    | if | return | switch | throw | throws | try | while | yield )
+    (?x: assert | break | case | catch | continue | default | do | else | finally | for
+    | if | return | switch | synchronized | throw | throws | try | while | yield )
   operator_keywords: |-
     (?x: new | instanceof )
   illegal_keywords: |-
     (?x: const | goto )
 
   # Storage Modifiers
+  #  excludes `default`, `synchronized` keywords
   storage_modifiers: |-
-    (?x:
-      {{class_modifier}}
-    | {{class_no_modifier}}
-    )
+    (?x: public | protected | private | abstract | final | native | non-sealed | sealed | static | strictfp | transient | volatile )
   # https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-8.1.1
   class_modifier: |-
-    (?x: public | protected | private | abstract | final | sealed | static | strictfp )
+    (?x: public | protected | private | abstract | final | non-sealed | sealed | static | strictfp )
   class_no_modifier: |-
     (?x: default | native | synchronized | transient | volatile )
   # https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-8.8
   constructor_modifier: |-
     (?x: public | protected | private )
   constructor_no_modifier: |-
-    (?x: abstract | default | final | native | sealed | static | strictfp | synchronized | transient | volatile )
+    (?x: abstract | default | final | native | non-sealed | sealed | static | strictfp | synchronized | transient | volatile )
   # https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-8.3.1
   field_modifier: |-
     (?x: public | protected | private | final | static | transient | volatile )
   field_no_modifier: |-
-    (?x: abstract | default | native | sealed | strictfp | synchronized )
+    (?x: abstract | default | native | non-sealed | sealed | strictfp | synchronized )
   # https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-9.1.1
   interface_modifier: |-
-    (?x: public | protected | private | abstract | sealed | static | strictfp )
+    (?x: public | protected | private | abstract | non-sealed | sealed | static | strictfp )
   interface_no_modifier: |-
     (?x: default | final | native | synchronized | transient | volatile )
   # https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-8.4.3
@@ -77,7 +77,7 @@ variables:
   method_modifier: |-
     (?x: public | protected | private | abstract | default | final | native | static | strictfp | synchronized )
   method_no_modifier: |-
-    (?x: sealed | transient | volatile )
+    (?x: non-sealed | sealed | transient | volatile )
 
   # Storage Types
   storage_types: |-
@@ -174,6 +174,7 @@ contexts:
   comments:
     - include: line-comments
     - include: block-comments
+    - include: merge-conflict-markers
 
   block-comments:
     # empty block comments
@@ -203,6 +204,7 @@ contexts:
       pop: 1
     - match: ^\s*(\*)(?![*/])
       scope: punctuation.definition.comment.java
+    - include: merge-conflict-markers
 
   line-comments:
     - match: //+
@@ -219,8 +221,9 @@ contexts:
 
   shebang:
     - meta_include_prototype: false
-    - match: ^\#!
-      scope: punctuation.definition.comment.java
+    - match: ^\s*(\#!)
+      captures:
+        1: punctuation.definition.comment.java
       set: shebang-body
     - match: ^|(?=\S)  # Note: Ensure to highlight shebang if Erlang is embedded.
       pop: 1
@@ -228,11 +231,30 @@ contexts:
   shebang-body:
     - meta_include_prototype: false
     - meta_scope: comment.line.shebang.java
-    # Note: Keep sync with first_line_match!
-    - match: \b(bsh|java)\b
+    - match: '{{shebang_language}}'
       scope: constant.language.shebang.java
-    - match: \n
+    - match: $\n?
       pop: 1
+
+###[ MERGE CONFLICT MARKERS ]##################################################
+
+  merge-conflict-markers:
+    # see also: Diff.sublime-syntax#conflict-markers
+    - match: ^(<{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.begin.diff
+      captures:
+        1: punctuation.section.block.begin.diff
+        2: entity.name.section.diff
+    - match: ^(>{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.end.diff
+      captures:
+        1: punctuation.section.block.end.diff
+        2: entity.name.section.diff
+    - match: ^(\|{7}|={7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.separator.diff
+      captures:
+        1: punctuation.section.block.diff
+        2: entity.name.section.diff
 
 ###[ ANNOTATIONS ]#############################################################
 
@@ -263,7 +285,7 @@ contexts:
     # fail: looks like a qualified annotation
     - match: (?={{single_dot}})
       fail: annotation-identifier
-    # fail: truncate meta scope immediatelly
+    # fail: truncate meta scope immediately
     - match: (?=\S)
       fail: annotation-unqualified-parameters
 
@@ -342,12 +364,15 @@ contexts:
     #   - locals:  class, variables
     #   - try/for: variables
     #
-    # Member declarations need to be handled differently as constructurs look
+    # Member declarations need to be handled differently as constructors look
     # exactly like function calls. The other two scopes (global, local) are
     # merged here to maintain syntax highlighting whenever possible. That's
     # needed for `incomplete code` scenarios or if contexts are lost due to
     # embedding Java into JSP.
-    - match: (?=[{{id_first_char}}@<])
+    - include: annotations
+    - match: (?=@interface{{break}})
+      push: interface-keyword
+    - match: (?=[{{id_first_char}}<])
       branch_point: declarations
       branch:
         - declaration-maybe-class
@@ -563,11 +588,18 @@ contexts:
     - include: immediately-pop
 
   import-modifier:
+    - match: module{{break}}
+      scope: keyword.declaration.module.java
+      set: import-module
     - match: static{{break}}
       scope: storage.modifier.java
       set: import-static
     - match: (?=\S)
       set: type-import
+
+  import-module:
+    - include: entity-module
+    - include: else-pop
 
   import-static:
     - match: (?=\S)
@@ -765,6 +797,7 @@ contexts:
 ###[ INTERFACE DECLARATIONS ]##################################################
 
   interface-keyword:
+    - meta_scope: meta.interface.java
     - match: (@?)interface{{break}}
       scope: keyword.declaration.interface.java
       set:
@@ -836,12 +869,29 @@ contexts:
 
 ###[ RECORD DECLARATIONS ]#####################################################
 
+  member-record-keyword:
+    # https://docs.oracle.com/javase/specs/jls/se16/html/jls-8.html#jls-8.10
+    - match: record{{break}}
+      scope: keyword.declaration.record.java
+      set:
+        - member-record-block
+        - record-extends
+        - record-parameters
+        - maybe-type-parameter
+        - class-name
+
+  member-record-block:
+    - match: \{
+      scope: punctuation.section.block.begin.java
+      set: class-block-body
+    - include: member-else-fail
+
   record-keyword:
     # https://docs.oracle.com/javase/specs/jls/se16/html/jls-8.html#jls-8.10
     - match: record{{break}}
       scope: keyword.declaration.record.java
       set:
-        - class-block
+        - record-block
         - record-extends
         - record-parameters
         - maybe-type-parameter
@@ -886,18 +936,27 @@ contexts:
         - inherited-object-type
     - include: else-pop
 
+  record-block:
+    - match: \{
+      scope: punctuation.section.block.begin.java
+      set: class-block-body
+    - include: declaration-else-fail
+
 ###[ MEMBER DECLARATIONS ]#####################################################
 
   member-declarations:
-    - match: (?=[{{id_first_char}}@<])
+    - include: annotations
+    - match: (?=@interface{{break}})
+      push: interface-keyword
+    - match: (?=[{{id_first_char}}<])
       branch_point: class-members
       branch:
         - member-maybe-constructor
-        - member-maybe-method
-        - member-maybe-field
         - member-maybe-class
         - member-maybe-enum
         - member-maybe-interface
+        - member-maybe-method
+        - member-maybe-field
 
   member-else-fail:
     - match: (?=\S)
@@ -911,7 +970,7 @@ contexts:
     # https://docs.oracle.com/javase/specs/jls/se13/html/jls-8.html#jls-8.1
     - meta_scope: meta.class.java
     - include: class-keyword
-    - include: record-keyword
+    - include: member-record-keyword
     - include: class-modifiers
     - include: member-else-fail
 
@@ -1247,8 +1306,9 @@ contexts:
     - meta_include_prototype: false
     - match: ''
       set:
+        - variable-declaration-value-assignment
         - variable-maybe-modifier
-        - variable-expect-identifier
+        - variable-declaration-identifier
 
   variable-maybe-modifier:
     - meta_content_scope: meta.variable.identifier.java
@@ -1710,11 +1770,12 @@ contexts:
     - include: else-pop
 
   instantiation-arguments:
+    - meta_content_scope: meta.function-call.identifier.java
     - match: \(
       scope: punctuation.section.group.begin.java
       set:
         - class-block
-        - group-body
+        - method-call-arguments-body
     - include: array-dimensions
     - include: else-pop
 
@@ -1900,11 +1961,12 @@ contexts:
     - match: \)
       scope: punctuation.section.group.end.java
       set: lambda-meta
-    - match: (?=[{{id_first_char}}@<])
+    - match: (?=[{{id_first_char}}<])
       branch_point: lambda-parameter-declaration
       branch:
         - lambda-parameter-declaration
-        - lambda-parameter-declaration-identifier
+        - parameter-identifier
+    - include: annotations
     - include: punctuation-separator-comma
     - include: expect-expression-terminator
 
@@ -2469,6 +2531,7 @@ contexts:
       scope: punctuation.definition.string.end.java
       pop: 1
     - include: illegal-newline
+    - include: merge-conflict-markers
     - include: literal-string-escapes
 
   literal-double-quoted-textblocks:
@@ -2485,6 +2548,7 @@ contexts:
     - match: \"{3}
       scope: punctuation.definition.string.end.java
       pop: 1
+    - include: merge-conflict-markers
     - include: literal-string-escapes
 
   literal-string-escapes:
@@ -2496,8 +2560,6 @@ contexts:
       scope: constant.character.escape.octal.java
     - match: '{{escape_other}}'
       scope: constant.character.escape.other.java
-    - match: \\.
-      scope: invalid.illegal.escape.java
 
 ###[ OPERATORS ]###############################################################
 
@@ -2531,7 +2593,7 @@ contexts:
     - include: operator-ternary-colon
     - include: expression
 
-###[ PUNCTUATIONS ]############################################################
+###[ PUNCTUATION ]#############################################################
 
   punctuations:
     - match: '::'
@@ -2972,10 +3034,10 @@ contexts:
     - match: '{{id}}'
       scope: support.class.java
       push:
-        - unqualiefied-object-type-end
+        - unqualified-object-type-end
         - maybe-type-argument
 
-  unqualiefied-object-type-end:
+  unqualified-object-type-end:
     - match: (?={{single_dot}})
       fail: object-type
     - include: else-pop3
@@ -3071,7 +3133,7 @@ contexts:
       scope: invalid.illegal.unexpected-keyword.java
       pop: 2
 
-###[ INHERRITED TYPE REFERENCES ]##############################################
+###[ INHERITED TYPE REFERENCES ]###############################################
 
   # Used in class-level 'extends' and 'implements'
   inherited-object-type-list:
@@ -3092,10 +3154,10 @@ contexts:
     - match: '{{id}}'
       scope: entity.other.inherited-class.java
       push:
-        - unqualiefied-inherited-object-type-end
+        - unqualified-inherited-object-type-end
         - maybe-type-argument
 
-  unqualiefied-inherited-object-type-end:
+  unqualified-inherited-object-type-end:
     - match: (?={{single_dot}})
       fail: inherited-object-type
     - include: illegal-array-modifiers

@@ -191,6 +191,74 @@ You may have to disable Go-specific linters when working on this file.
 //           ^^^^^^ comment.line.double-slash.go meta.annotation.parameters.go
 //                 ^ comment.line.double-slash.go - meta.annotation
 
+/*
+ * Merge Conflict Marker Tests
+ */
+
+/* Merge conflicts in comments
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+*/
+
+/** Merge conflicts in docblock comments
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
+*/
+
+/* Top-level merge conflicts */
+
+<<<<<<< HEAD
+// <- meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//^^^^^ meta.block.conflict.begin.diff punctuation.section.block.begin.diff
+//     ^ meta.block.conflict.begin.diff - entity - punctuation
+//      ^^^^ meta.block.conflict.begin.diff entity.name.section.diff
+//          ^ meta.block.conflict.begin.diff - entity - punctuation
+
+=======
+// <- meta.block.conflict.separator.diff punctuation.section.block.diff
+//^^^^^ meta.block.conflict.separator.diff punctuation.section.block.diff
+//     ^ meta.block.conflict.separator.diff - punctuation
+
+>>>>>>> master
+// <- meta.block.conflict.end.diff punctuation.section.block.end.diff
+//^^^^^ meta.block.conflict.end.diff punctuation.section.block.end.diff
+//     ^ meta.block.conflict.end.diff - entity - punctuation
+//      ^^^^^^ meta.block.conflict.end.diff entity.name.section.diff
+//            ^ meta.block.conflict.end.diff - entity - punctuation
 
 /* # Imports */
 
@@ -1211,6 +1279,16 @@ by accident, but if necessary, such support could be sacrificed.
 //                               ^^^ meta.type.go storage.type.go
 //                                  ^ meta.type.go punctuation.section.parens.end.go
 
+        Method(Type[TypeArg])
+//      ^^^^^^^^^^^^^^^^^^^^^ meta.type.go
+//      ^^^^^^ entity.name.function.go
+//            ^ punctuation.section.parens.begin.go
+//             ^^^^ storage.type.go
+//                 ^ punctuation.section.brackets.begin.go
+//                  ^^^^^^^ variable.other.type.go
+//                         ^ punctuation.section.brackets.end.go
+//                          ^ punctuation.section.parens.end.go
+
         Inherit
 //      ^^^^^^^ meta.type.go storage.type.go
 
@@ -1557,6 +1635,19 @@ by accident, but if necessary, such support could be sacrificed.
 //                                            ^ punctuation.definition.string.begin
 //                                                 ^ punctuation.definition.string.end
 //                                                  ^ punctuation.definition.annotation.end
+
+        field typ `API-v2_0:"field"`
+//      ^^^^^ meta.type.go variable.other.member.declaration.go
+//            ^^^ meta.type.go storage.type.go
+//                ^^^^^^^^^^^^^^^^^^ meta.type.go meta.annotation - meta.annotation meta.annotation
+//                ^ punctuation.definition.annotation.begin
+//                 ^^^^^^^^ meta.annotation.identifier variable.annotation
+//                         ^ punctuation.separator.key-value
+//                          ^ punctuation.definition.string.begin
+//                           ^^^^^ meta.annotation.parameters string.quoted.double
+//                                ^ punctuation.definition.string.end
+//                                 ^ punctuation.definition.annotation.end
+
         field /**/ typ /**/ `json:"field"`
 //      ^^^^^ meta.type.go variable.other.member.declaration.go
 //            ^^^^ meta.type.go comment.block.go
@@ -4476,45 +4567,95 @@ by accident, but if necessary, such support could be sacrificed.
 //  ^ punctuation.definition.string.begin.go
 //  ^^^^^^^^^ meta.string.go string.quoted.double.go
 //          ^ punctuation.definition.string.end.go
+
     "one \\ \n two"
 //  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^ constant.character.escape.go
+
     "one %% two"
 //  ^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^ constant.character.escape.go
+
     "one % two"
 //  ^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^ constant.other.placeholder.go
+
     "one %v two"
 //  ^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^ constant.other.placeholder.go
+
+    "one %#v two"
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//       ^^^ constant.other.placeholder.go
+
     "one %+v two"
 //  ^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^ constant.other.placeholder.go
+
+    "one %-v two"
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//       ^^^ constant.other.placeholder.go
+
+    "one %0v two"
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//       ^^^ constant.other.placeholder.go
+
+    "one %.2d two"
+//  ^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//       ^^^^ constant.other.placeholder.go
+
     "one %1.2d two"
 //  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^^^ constant.other.placeholder.go
+
     "one %[1] two"
 //  ^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
-//       ^^^^^^ constant.other.placeholder.go
+//       ^^^^ - constant.other.placeholder.go
+
     "one %[1]v two"
 //  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^^^ constant.other.placeholder.go
+
     "one %[1]+v two"
 //  ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//       ^^^^^^ - constant.other.placeholder
+
+    "one %+[1]v two"
+//  ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^^^^ constant.other.placeholder.go
+
     "one %[1]1.2d two"
 //  ^^^^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//       ^^^^^^^^ - constant.other.placeholder
+
+    "one %1.2[1]d two"
+//  ^^^^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^^^^^^ constant.other.placeholder.go
+
     "foo %*f bar"
 //  ^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^ constant.other.placeholder.go
+
     "foo %.*f bar"
 //  ^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^^ constant.other.placeholder.go
+
     "foo %*.*f bar"
 //  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
 //       ^^^^^ constant.other.placeholder.go
+
+    "%[3]*.[2]*[1]f"
+//  ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//   ^^^^^^^^^^^^^^ constant.other.placeholder.go
+
+    "%d %d %#[1]x %#x %w"
+//  ^^^^^^^^^^^^^^^^^^^^^ meta.string.go string.quoted.double.go
+//   ^^ constant.other.placeholder.go
+//      ^^ constant.other.placeholder.go
+//         ^^^^^^ constant.other.placeholder.go
+//                ^^^ constant.other.placeholder.go
+//                    ^^ constant.other.placeholder.go
+
     "%"
 //  ^^^ meta.string.go string.quoted.double.go
 //   ^ - constant.other.placeholder
@@ -4556,37 +4697,96 @@ by accident, but if necessary, such support could be sacrificed.
 //  ^ punctuation.definition.string.begin.go
 //  ^^^^^^^^^ string.quoted.backtick.go
 //          ^ punctuation.definition.string.end.go
+
     `one \\ \n two`
-//  ^^^^^^^^^^^^^^^ string.quoted.backtick.go - constant.character.escape
+//  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go - constant.character.escape
+
     `one %% two`
-//  ^^^^^^^^^^^^ string.quoted.backtick.go
+//  ^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^ constant.character.escape.go
+
     `one % two`
-//  ^^^^^^^^^^^ string.quoted.backtick.go
+//  ^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^^ constant.other.placeholder.go
+
     `one %v two`
-//  ^^^^^^^^^^^^ string.quoted.backtick.go
+//  ^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^ constant.other.placeholder.go
-    `one %+v two`
-//  ^^^^^^^^^^^^^ string.quoted.backtick.go
+
+    `one %#v two`
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^^ constant.other.placeholder.go
+
+    `one %+v two`
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^ constant.other.placeholder.go
+
+    `one %-v two`
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^ constant.other.placeholder.go
+
+    `one %0v two`
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^ constant.other.placeholder.go
+
+    `one %.2d two`
+//  ^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^^ constant.other.placeholder.go
+
     `one %1.2d two`
-//  ^^^^^^^^^^^^^^^ string.quoted.backtick.go
+//  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^^^^ constant.other.placeholder.go
+
     `one %[1] two`
-//  ^^^^^^^^^^^ string.quoted.backtick.go
-//       ^^^^^^ constant.other.placeholder.go
+//  ^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^^ - constant.other.placeholder.go
+
     `one %[1]v two`
-//  ^^^^^^^^^^^^ string.quoted.backtick.go
+//  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^^^^ constant.other.placeholder.go
+
     `one %[1]+v two`
-//  ^^^^^^^^^^^^^ string.quoted.backtick.go
+//  ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^^^^ - constant.other.placeholder
+
+    `one %+[1]v two`
+//  ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^^^^^ constant.other.placeholder.go
+
     `one %[1]1.2d two`
-//  ^^^^^^^^^^^^^^^ string.quoted.backtick.go
+//  ^^^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^^^^^^ - constant.other.placeholder
+
+    `one %1.2[1]d two`
+//  ^^^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
 //       ^^^^^^^^ constant.other.placeholder.go
+
+    `foo %*f bar`
+//  ^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^ constant.other.placeholder.go
+
+    `foo %.*f bar`
+//  ^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^^ constant.other.placeholder.go
+
+    `foo %*.*f bar`
+//  ^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//       ^^^^^ constant.other.placeholder.go
+
+    `%[3]*.[2]*[1]f`
+//  ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//   ^^^^^^^^^^^^^^ constant.other.placeholder.go
+
+    `%d %d %#[1]x %#x %w`
+//  ^^^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go
+//   ^^ constant.other.placeholder.go
+//      ^^ constant.other.placeholder.go
+//         ^^^^^^ constant.other.placeholder.go
+//                ^^^ constant.other.placeholder.go
+//                    ^^ constant.other.placeholder.go
+
     `%`
-//  ^^^ string.quoted.backtick.go
+//  ^^^ meta.string.go string.quoted.backtick.go
 //   ^ - constant.other.placeholder
 
     `
@@ -4824,6 +5024,16 @@ by accident, but if necessary, such support could be sacrificed.
 //  ^^^^ variable.function.go
     )
 
+    ident[Type[TypeArg]]()
+//  ^^^^^ variable.function.go
+//       ^ punctuation.section.brackets.begin.go
+//        ^^^^ variable.other.type.go
+//            ^ punctuation.section.brackets.begin.go
+//             ^^^^^^^ variable.other.go
+//                    ^^ punctuation.section.brackets.end.go
+//                      ^ punctuation.section.parens.begin.go
+//                       ^ punctuation.section.parens.end.go
+
     ident.ident()
 //  ^^^^^ variable.other.go
 //       ^ punctuation.accessor.dot.go
@@ -4845,6 +5055,36 @@ by accident, but if necessary, such support could be sacrificed.
 //                   ^ punctuation.section.parens.begin.go
 //                    ^^^^^ variable.other.go
 //                         ^ punctuation.section.parens.end.go
+
+    ident.ident.ident[Type, Type](ident)
+//  ^^^^^ variable.other.go
+//       ^ punctuation.accessor.dot.go
+//        ^^^^^ variable.other.member.go
+//             ^ punctuation.accessor.dot.go
+//              ^^^^^ variable.function.go
+//                   ^ punctuation.section.brackets.begin.go
+//                    ^^^^ variable.other.type.go
+//                        ^ punctuation.separator.go
+//                          ^^^^ variable.other.type.go
+//                              ^ punctuation.section.brackets.end.go
+//                               ^ punctuation.section.parens.begin.go
+//                                ^^^^^ variable.other.go
+//                                     ^ punctuation.section.parens.end.go
+
+    ident.ident.ident[Type[TypeArg]](ident)
+//  ^^^^^ variable.other.go
+//       ^ punctuation.accessor.dot.go
+//        ^^^^^ variable.other.member.go
+//             ^ punctuation.accessor.dot.go
+//              ^^^^^ variable.function.go
+//                   ^ punctuation.section.brackets.begin.go
+//                    ^^^^ variable.other.type.go
+//                        ^ punctuation.section.brackets.begin.go
+//                         ^^^^^^^ variable.other.go
+//                                ^^ punctuation.section.brackets.end.go
+//                                  ^ punctuation.section.parens.begin.go
+//                                   ^^^^^ variable.other.go
+//                                        ^ punctuation.section.parens.end.go
 
     ident /**/ . /**/
 //  ^^^^^ variable.other.go
@@ -5031,6 +5271,19 @@ by accident, but if necessary, such support could be sacrificed.
     ) typ {}
 //    ^^^ storage.type.go
 
+    func FuncName(param [][]Type) {}
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.function.declaration.go
+//  ^^^^ keyword.declaration.function.go
+//       ^^^^^^^^ entity.name.function.go
+//               ^ punctuation.section.parens.begin.go
+//                ^^^^^ variable.parameter.go
+//                      ^ punctuation.section.brackets.begin.go
+//                       ^ punctuation.section.brackets.end.go
+//                        ^ punctuation.section.brackets.begin.go
+//                         ^ punctuation.section.brackets.end.go
+//                          ^^^^ storage.type.go
+//                              ^ punctuation.section.parens.end.go
+
 /* ### Methods */
 
     func (self Type) Method() {}
@@ -5050,6 +5303,18 @@ by accident, but if necessary, such support could be sacrificed.
 //              ^^^^^^ meta.function.declaration.go entity.name.function.go
 //                    ^ punctuation.section.parens.begin.go
 //                     ^ punctuation.section.parens.end.go
+
+    func(Type, Type[TypeArg])
+//  ^^^^ keyword.declaration.function.go
+//      ^^^^^^^^^^^^^^^^^^^^^ meta.function.declaration.go
+//      ^ punctuation.section.parens.begin.go
+//       ^^^^ storage.type.go
+//           ^ punctuation.separator.go
+//             ^^^^ storage.type.go
+//                 ^ punctuation.section.brackets.begin.go
+//                  ^^^^^^^ variable.other.type.go
+//                         ^ punctuation.section.brackets.end.go
+//                          ^ punctuation.section.parens.end.go
 
     func /**/
 //  ^^^^ keyword.declaration.function.go
@@ -5776,7 +6041,7 @@ func lang_embedding() {
     //          ^ meta.string.go string.quoted.backtick.go punctuation.definition.string.begin.go
     //           ^ meta.string.go meta.embedded.go source.sql.embedded.go
         update schema.table
-    //  ^^^^^^ meta.string.go meta.embedded.go source.sql.embedded.go keyword.other.DML.sql
+    //  ^^^^^^ meta.string.go meta.embedded.go source.sql.embedded.go keyword.other.dml.sql
         set
           some_field = null
         where
@@ -5792,13 +6057,28 @@ func lang_embedding() {
     require.Equal(t, 1, testdb.QueryInt(env.testDb, `select count(*) from "schema.{{.site.table}}" order by {{.order}}`))
     //                                              ^ meta.string.go string.quoted.backtick.go punctuation.definition.string.begin.go
     //                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.go meta.embedded.go source.sql.embedded.go
-    //                                                                            ^^^^^^^^^^^^^^^ meta.string.go meta.embedded.go source.sql.embedded.go meta.interpolation.go - string
-    //                                                                                           ^^^^^^^^^^^ meta.block.go meta.string.go meta.embedded.go source.sql.embedded.go
+    //                                                                            ^^^^^^^^^^^^^^^ meta.string.go meta.embedded.go source.sql.embedded.go meta.table-name.sql meta.interpolation.go - string
+    //                                                                            ^^ punctuation.section.interpolation.begin.go
+    //                                                                                         ^^ punctuation.section.interpolation.end.go
+    //                                                                                           ^^^^^^^^^^^ meta.block.go meta.string.go meta.embedded.go
     //                                                                                                      ^^^^^^^^^^ meta.string.go meta.embedded.go source.sql.embedded.go meta.interpolation.go - string
+    //                                                                                                      ^^ punctuation.section.interpolation.begin.go
+    //                                                                                                              ^^ punctuation.section.interpolation.end.go
     //                                                                                                                ^ meta.string.go string.quoted.backtick.go punctuation.definition.string.end.go
     //                                               ^^^^^^ keyword.other
     not_sql_string = `select not sql`
     //               ^^^^^^^^^^^^^^^^ meta.string.go string.quoted.backtick.go - source.sql
+
+    //language=t-sql
+    // <- comment.line.double-slash.go punctuation.definition.comment.go
+    //^^^^^^^^^^^^^^^ comment.line.double-slash.go
+    //^^^^^^^^ meta.annotation.identifier.go
+    //        ^ meta.annotation keyword.operator.assignment.go
+    //         ^^^^^ meta.annotation.parameters.go constant.other.language-name.go
+    sqlQuery = `
+        SELECT id
+        FROM ##global_temp_table;`
+    //       ^^ punctuation.definition.variable
 
     response := &http.Response{
         StatusCode: http.StatusUnauthorized,

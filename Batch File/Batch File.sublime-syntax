@@ -23,10 +23,19 @@ first_line_match: |-
 ###############################################################################
 
 variables:
+  # Tokens are separated by token delimiters.
+  # The standard token delimiters are <space> <tab> ; , = <0x0B> <0x0C> and <0xFF>
+  # Consecutive token delimiters are treated as one - there are no empty tokens
+  # between token delimiters
+  delim_char: ' \t;,=\x0B\x0C\xFF'
+
+  # The following characters may have special meaning in this phase, depending on context:
+  # <CR> ^ ( @ & | < > <LF> <space> <tab> ; , = <0x0B> <0x0C> <0xFF>
+
   # A character that, when unquoted, separates words. A metacharacter is a
   # space, tab, newline, or one of the following characters:
   # ‘|’, ‘&’, ‘,’, ‘;’, ‘<’, or ‘>’.
-  metachar: '[\s=,;{{redir_or_eoc_char}}]'
+  metachar: '{{delim_char}}{{redir_or_eoc_char}}'
 
   # Keywords
   keyword_break: (?![^{{metachar}}(.:\\/])
@@ -44,16 +53,21 @@ variables:
   arg_char: '[^{{metachar}}:]'
 
   # Command statement terminators and redirections
-  redir_or_eoc: (?=\s*{{redir_or_eoc_char}})
-  redir_or_eoc_char: '[<>{{eoc_char}}]'
-  eoc: (?=\s*{{eoc_char}})
-  eoc_char: '[\n|&]'
+  redir_or_eoc: (?=\s*[{{redir_or_eoc_char}}])
+  redir_or_eoc_char: '<>{{eoc_char}}'
+  eoc: (?=\s*[{{eoc_char}}])
+  eoc_char: \n\|&
 
-  label_comment: ':+[^{{label_start}}]'
-  label_start: '[^{{metachar}}:+]'
+  # Label definition statements
+  label_comment: :[:+]+
+  label_begin: (?=[^{{delim_char}}])
+  label_break: (?![^ \t:+{{redir_or_eoc_char}}])
 
-  path_terminator_chars: '[\s,;"{{redir_or_eoc_char}}]'
-  path_terminators: (?={{path_terminator_chars}})
+  # Label variable
+  # If labels appear in arguments, normal word parsing is performed first with
+  # everything up a label break character being used for label lookup.
+  # A label variable is therefore terminated by `+`, `:` or word break (`metachar`)
+  label_variable_break: (?![^:+{{metachar}}])
 
   set_arithmetic_operators_unquoted: (?:\+|-|\*|/|%%|~)
   set_arithmetic_operators_quoted: (?:\||<<|>>|&|\^)
@@ -121,14 +135,15 @@ variables:
 
 contexts:
   main:
-    - include: comments
     - include: statements
 
   statements:
-    - include: blocks
+    - include: comments
     - include: labels
+    - include: blocks
     - include: operators
     - include: redirections
+    - include: separators
     - include: control
     - include: commands
 
@@ -158,6 +173,7 @@ contexts:
     - match: '{{label_comment}}'
       scope: punctuation.definition.comment.dosbatch
       push: comment-body
+    - include: merge-conflict-markers
 
   comment-body:
     - meta_scope: comment.line.colon.dosbatch
@@ -184,25 +200,60 @@ contexts:
     - match: '{{unquoted_word_begin}}'
       push: unquoted-word-end
 
+###[ MERGE CONFLICT MARKERS ]##################################################
+
+  merge-conflict-markers:
+    # see also: Diff.sublime-syntax#conflict-markers
+    - match: ^(<{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.begin.diff
+      captures:
+        1: punctuation.section.block.begin.diff
+        2: entity.name.section.diff
+    - match: ^(>{7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.end.diff
+      captures:
+        1: punctuation.section.block.end.diff
+        2: entity.name.section.diff
+    - match: ^(\|{7}|={7})(?:\s+(\S.*?))?$\n?
+      scope: meta.block.conflict.separator.diff
+      captures:
+        1: punctuation.section.block.diff
+        2: entity.name.section.diff
+
 ###[ LABELS ]#################################################################
 
-  maybe-label:
-    - match: \:(?={{label_start}})
-      scope: entity.name.label.dosbatch punctuation.definition.label.dosbatch
-      set: label-name
-    - include: else-pop
-
   labels:
-    - match: ^\s*(:)(?={{label_start}})
-      captures:
-        1: entity.name.label.dosbatch punctuation.definition.label.dosbatch
-      push: label-name
+    - match: ':'
+      scope: punctuation.definition.label.dosbatch
+      push: label-begin
+
+  label-begin:
+    - meta_content_scope: comment.line.ignored.dosbatch
+    - match: (?=\^\n)
+      set: label-skip
+    - match: '{{label_begin}}'
+      set: label-name
+    - include: label-tail
 
   label-name:
     - meta_content_scope: entity.name.label.dosbatch
-    - match: '{{word_break}}'
-      set: ignored-tail-outer
+    - match: \s+|{{label_break}}
+      set: label-tail
     - include: escaped-characters
+
+  label-skip:
+    - meta_include_prototype: false
+    - meta_content_scope: comment.line.ignored.dosbatch
+    - include: line-continuations
+    - include: label-tail
+
+  label-tail:
+    # neither line continuation, pipelining or quotations are supported
+    - meta_include_prototype: false
+    - meta_content_scope: comment.line.ignored.dosbatch
+    - match: $\n?
+      scope: comment.line.ignored.dosbatch
+      pop: 1
 
 ###[ BLOCKS ]#################################################################
 
@@ -241,7 +292,7 @@ contexts:
     - match: \)
       scope: punctuation.section.block.end.dosbatch
       pop: 1
-    - include: main
+    - include: statements
 
   groups:
     - match: \(
@@ -254,8 +305,7 @@ contexts:
       scope: punctuation.section.group.end.dosbatch
       pop: 1
     - include: groups
-    - include: separator-semicolon
-    - include: separator-comma
+    - include: separators
     - include: redirections
     - include: cmd-args-values
 
@@ -445,7 +495,7 @@ contexts:
 
   ctl-for-in:
     - match: (?i:in){{keyword_break}}
-      scope: keyword.operator.logical.dosbatch
+      scope: keyword.control.loop.in.dosbatch
       pop: 1
     - include: else-pop
 
@@ -461,7 +511,7 @@ contexts:
       scope: punctuation.section.set.end.dosbatch
       pop: 1
     - include: invalid-operators
-    - include: separator-comma
+    - include: separators
     - include: embedded
     - include: cmd-args-values
 
@@ -484,14 +534,16 @@ contexts:
   ctl-call-identifier:
     - meta_content_scope: meta.function-call.dosbatch
     - match: ':'
-      scope: punctuation.definition.variable.dosbatch
+      scope: variable.label.dosbatch punctuation.definition.label.dosbatch
       set: ctl-call-label
     - include: cmd-arg-help
     - include: else-pop
 
   ctl-call-label:
-    - meta_scope: meta.function-call.identifier.dosbatch variable.label.dosbatch
-    - match: '{{word_break}}'
+    - meta_scope: meta.function-call.identifier.dosbatch
+    - meta_content_scope: variable.label.dosbatch
+    - match: (?:[+:][^{{metachar}}]*)?{{word_break}}
+      scope: comment.line.ignored.dosbatch
       set:
         - cmd-args-meta
         - cmd-args-body
@@ -549,14 +601,16 @@ contexts:
         1: punctuation.definition.variable.dosbatch
         2: keyword.control.flow.return.dosbatch
       pop: 1
-    - match: (:)?(?={{label_start}})
+    - match: (:)?{{label_begin}}
       scope: punctuation.definition.label.dosbatch
       set: ctl-goto-label
 
   ctl-goto-label:
     - meta_scope: variable.label.dosbatch
+    - match: '{{label_variable_break}}'
+      set: ignored-tail-outer
     - include: line-continuations
-    - include: label-name
+    - include: escaped-characters
     - include: variables
 
 ###[ CONTROL PAUSE ]##########################################################
@@ -672,6 +726,7 @@ contexts:
   cmd-args-body:
     - include: redirections
     - include: eoc-pop
+    - include: separators
     - include: cmd-arg-help
     - include: cmd-args-options
     - include: cmd-args-values
@@ -798,8 +853,6 @@ contexts:
     - include: immediately-pop
 
   cmd-mode-args:
-    - include: redirections
-    - include: eoc-pop
     - match: (?i:COM\d+|CON|LPT\d+):?{{arg_break}}
       scope: variable.language.device.dosbatch
     # known option values
@@ -813,9 +866,7 @@ contexts:
       scope: variable.parameter.option.dosbatch
     - match: =
       scope: keyword.operator.assignment.dosbatch
-    - include: cmd-arg-help
-    - include: cmd-args-options
-    - include: cmd-args-values
+    - include: cmd-args-body
 
 ###[ COMMAND REM ]############################################################
 
@@ -849,16 +900,15 @@ contexts:
       captures:
         1: punctuation.separator.continuation.line.dosbatch
       set: line-continuation-body
-    - match: (?={{metachar}})
+    - match: '{{word_break}}'
       pop: 1
 
   cmd-rem-comment-body:
     - meta_include_prototype: false
     # meta_content_scope is used since rem should not be
     # highlighted as a comment, but a command
-    - meta_content_scope: comment.line.rem.dosbatch
+    - meta_scope: comment.line.rem.dosbatch
     - match: $\n?
-      scope: comment.line.rem.dosbatch
       pop: 1
 
 ###[ COMMAND SET ]############################################################
@@ -1069,7 +1119,7 @@ contexts:
     #    b) command terminations via `&` or `|`
     #    and those which don't.
     #
-    # The challange here is to correctly switch contexts to maintain both
+    # The challenge here is to correctly switch contexts to maintain both
     # "quoted" and "grouped" states at the same time.
     #
     # Variables may not contain whitespace nor any kind of operator char.
@@ -1190,7 +1240,7 @@ contexts:
     - match: '!'
       scope: keyword.operator.logical.dosbatch
     - include: numbers
-    - include: separator-comma
+    - include: separators
     - include: escaped-characters
     - include: variables
     - match: '[^-+*/%~=()"''^{{metachar}}]+'
@@ -1548,18 +1598,18 @@ contexts:
   operators:
     - match: \@
       scope: keyword.operator.at.dosbatch
-      push: maybe-label
     - match: \&\&?|\|\|
       scope: keyword.operator.logical.dosbatch
     - match: \|
       scope: keyword.operator.assignment.pipe.dosbatch
       push: maybe-illegal-comment
 
-  separator-comma:
+  separators:
+    # non-whitespace chars, which break or separate words
+    - match: =
+      scope: punctuation.separator.dosbatch
     - match: ','
       scope: punctuation.separator.comma.dosbatch
-
-  separator-semicolon:
     - match: ';'
       scope: punctuation.separator.semicolon.dosbatch
 
@@ -1675,17 +1725,12 @@ contexts:
 
   path-pattern-unquoted-body:
     - meta_scope: meta.path.dosbatch meta.string.dosbatch string.unquoted.dosbatch
-    - include: path-pattern-unquoted-end
+    - include: unquoted-word-end
     - include: path-pattern-unquoted-content
 
   path-pattern-unquoted-content:
     - include: unquoted-escapes-and-interpolations
     - include: path-pattern-common
-
-  path-pattern-unquoted-end:
-    - match: '{{path_terminators}}'
-      pop: 1
-    - include: line-continuations
 
   path-pattern-common:
     - match: '[:\\/]'
@@ -1729,7 +1774,7 @@ contexts:
     - include: quoted-eol-pop
 
   escaped-characters:
-    - match: \^.
+    - match: \^[^%\n]
       scope: constant.character.escape.dosbatch
 
   escaped-variables:
@@ -1782,7 +1827,7 @@ contexts:
     - match: '{{parameter}}'
       scope:
         meta.interpolation.dosbatch
-        variable.parameter.dosbatch
+        variable.language.positional.dosbatch
       captures:
         1: punctuation.definition.variable.dosbatch
       push: clear-string-scope
@@ -1864,7 +1909,7 @@ contexts:
     - match: =
       scope:
         meta.interpolation.substitution.dosbatch
-        keyword.operator.asignment.dosbatch
+        keyword.operator.assignment.dosbatch
       set: variable-expansion-substitution-replacement
     - match: '[^=%!]+'
       scope: string.unquoted.dosbatch
@@ -1922,7 +1967,7 @@ contexts:
     - match: =
       scope:
         meta.interpolation.substitution.dosbatch
-        keyword.operator.asignment.dosbatch
+        keyword.operator.assignment.dosbatch
       set: variable-delayed-substitution-replacement
     - match: '[^=%!]+'
       scope: string.unquoted.dosbatch
@@ -1949,7 +1994,7 @@ contexts:
       scope: variable.other.readwrite.dosbatch
 
   variable-substrings:
-    - include: separator-comma
+    - include: separators
     - match: ([-+]?)(0|[1-9][0-9]*)
       scope: meta.number.integer.decimal.dosbatch
       captures:
@@ -2002,7 +2047,7 @@ contexts:
 
   line-continuation-body:
     - meta_include_prototype: false
-    # The first linefeed diretly following a continuation is treated literal.
+    # The first linefeed directly following a continuation is treated literal.
     # Note: Must consume \n to work.
     - match: ^\n
       set: bol-pop
